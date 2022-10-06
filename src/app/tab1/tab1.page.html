@@ -1,38 +1,41 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title style="font-size: small;">
-      Lost Docs
-    </ion-title>
+    <ion-title style="font-size: small"> Devices </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <ion-fab vertical="top" horizontal="end" edge slot="fixed">
-    <ion-fab-button (click)="addDoc()">
+    <ion-fab-button (click)="addDevice()">
       <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-searchbar placeholder="Filter" showCancelButton="focus" [(ngModel)]="term" animated="true"></ion-searchbar>
+  <ion-searchbar
+    placeholder="Filter"
+    showCancelButton="focus"
+    [(ngModel)]="term"
+    animated="true"
+  ></ion-searchbar>
 
-  <ion-card color="light" *ngFor="let lostDoc of lostDocs | filter:term">
-    <div class="img-wrapper" style="padding-top: 15px;">
-      <img *ngIf="!lostDoc.imageUrl" src="../../assets/images/no_image.png" />
-      <img *ngIf="lostDoc.imageUrl" [src]="lostDoc.imageUrl" />
-      <ion-button color="light" (click)="viewDoc(lostDoc)">
+  <ion-card color="light" *ngFor="let device of devices | filter:term">
+    <div class="img-wrapper" style="padding-top: 15px">
+      <img *ngIf="!device.imageUrl" src="../../assets/images/no_image.png" />
+      <img *ngIf="device.imageUrl" [src]="device.imageUrl" />
+      <ion-button color="light" (click)="viewDevice(device)">
         <ion-icon slot="icon-only" name="camera-outline" color="medium">
         </ion-icon>
       </ion-button>
     </div>
-    <ion-card-content class="ion-text-center" style="margin-bottom: 40px;">
-      <h2> {{lostDoc.firstname}} {{lostDoc.lastname}} </h2>
+    <ion-card-content class="ion-text-center" style="margin-bottom: 40px">
+      <h2>{{device.deviceBrand}} {{device.deviceModel}}</h2>
       <ion-text color="medium">
-        <div style="display: flex;" class="ion-justify-content-center">
-          <ion-icon name="location-outline" color="medium">
-          </ion-icon>
-          <p>{{lostDoc.address}}</p>
+        <div style="display: flex" class="ion-justify-content-center">
+          <p>R {{device.price}}</p>
         </div>
       </ion-text>
-      <label vertical="left" style="font-size: 12px;">Date found: {{lostDoc.dateFound | date}}</label>
+      <label vertical="left" style="font-size: 12px"
+        >Date Purchased: {{device.datePurchased | date}}</label
+      >
     </ion-card-content>
   </ion-card>
 </ion-content>

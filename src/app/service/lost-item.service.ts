@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { LostItemHttp } from '../http/lost-item.http';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LostItemService {
   document: any = {};
-  constructor(private lostItemHttp: LostItemHttp) { }
+  constructor(private lostItemHttp: LostItemHttp) {}
 
   saveDocToStore(doc: any) {
     this.document = doc;
@@ -24,8 +24,8 @@ export class LostItemService {
     return this.lostItemHttp.saveFoundDoc(doc);
   }
 
-  getLostDocs() {
-    return this.lostItemHttp.getLostDocs();
+  getUserDevices(email: string) {
+    return this.lostItemHttp.getUserDevices(email);
   }
 
   getmatchedDocs(email: string) {
@@ -52,7 +52,12 @@ export class LostItemService {
     return this.lostItemHttp.getUserChats(id);
   }
 
-  sendMessage(message: { from: string; text: string; created: Date; chatId: any; }) {
+  sendMessage(message: {
+    from: string;
+    text: string;
+    created: Date;
+    chatId: any;
+  }) {
     return this.lostItemHttp.sendMessage(message);
   }
 

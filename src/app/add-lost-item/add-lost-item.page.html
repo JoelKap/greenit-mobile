@@ -3,56 +3,95 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title style="font-size: small;">Add item</ion-title>
+    <ion-title style="font-size: small">Add device</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form class="form" [formGroup]="lostDocForm" (ngSubmit)="saveFoundDoc(lostDocForm.value)">
-
+  <form class="form" [formGroup]="deviceForm" (ngSubmit)="saveFoundDoc()">
     <ion-item>
-      <ion-label>Doc Type</ion-label>
-      <ion-select placeholder="Select one" (ionChange)="onDocumentChaged($event)">
-        <ion-select-option value="ID">ID Document</ion-select-option>
-        <ion-select-option value="cert">Certificate</ion-select-option>
+      <ion-label>Brand</ion-label>
+      <ion-select
+        placeholder="Select a brand"
+        (ionChange)="onBrandChanged($event)"
+      >
+        <ion-select-option value="Sony">Sony</ion-select-option>
+        <ion-select-option value="Samsung">Samsung</ion-select-option>
+        <ion-select-option value="Iphone">Iphone</ion-select-option>
+        <ion-select-option value="Huawei">Huawei</ion-select-option>
+        <ion-select-option value="Nokia">Nokia</ion-select-option>
+        <ion-select-option value="Oppo">Oppo</ion-select-option>
+        <ion-select-option value="Vivo">Vivo</ion-select-option>
+        <ion-select-option value="One Plus">One Plus</ion-select-option>
+        <ion-select-option value="Hisense">Hisense</ion-select-option>
+        <ion-select-option value="Motorola">Motorola</ion-select-option>
+        <ion-select-option value="Honor">Honor</ion-select-option>
       </ion-select>
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Date Found</ion-label>
-      <ion-datetime displayFormat="MM/DD/YYYY" min="1994-03-14" formControlName="dateFound" value="2002-09-23T15:03:46.789"></ion-datetime>
-    </ion-item>
- 
-    <ion-item>
-      <ion-label position="floating">First name</ion-label>
-      <ion-input type="text" formControlName="firstname"></ion-input>
-    </ion-item>
-
-    <ion-item>
-      <ion-label position="floating">Last Name</ion-label>
-      <ion-input type="text" formControlName="lastname"></ion-input>
-    </ion-item>
-
-    <ion-item *ngIf="selectedDocumentType === 'ID'">
-      <ion-label position="floating">ID Number</ion-label>
-      <ion-input type="text"  formControlName="idNumber" class="form-controll"></ion-input>
+      <ion-label>Condition</ion-label>
+      <ion-select
+        placeholder="Select a condition"
+        (ionChange)="onConditionChanged($event)"
+      >
+        <ion-select-option value="New">New</ion-select-option>
+        <ion-select-option value="Used-New">Used - Like New</ion-select-option>
+        <ion-select-option value="Used-Good">Used - Good</ion-select-option>
+        <ion-select-option value="Used-Fair">Used- Fair</ion-select-option>
+      </ion-select>
     </ion-item>
 
     <ion-item>
-      <ion-label position="floating">Address found on Doc</ion-label>
+      <ion-label position="floating">Model</ion-label>
+      <ion-input type="text" formControlName="deviceModel"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">IMEI</ion-label>
+      <ion-input
+        type="text"
+        formControlName="imei"
+        class="form-controll"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Price</ion-label>
+      <ion-input type="number" formControlName="price"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Description</ion-label>
+      <ion-input
+        type="text"
+        formControlName="description"
+        class="form-controll"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Date Purchased</ion-label>
+      <ion-datetime
+        displayFormat="MM/DD/YYYY"
+        min="1994-03-14"
+        formControlName="datePurchased"
+        value="2002-09-23T15:03:46.789"
+      ></ion-datetime>
+    </ion-item>
+
+    <!-- <ion-item>
+      <ion-label position="floating">Description</ion-label>
       <ion-input type="text" formControlName="address" class="form-controll"></ion-input>
     </ion-item>
 
     <ion-item *ngIf="selectedDocumentType === 'cert'">
       <ion-label position="floating">Reference</ion-label>
       <ion-input type="text"  formControlName="referenceNumber" class="form-controll"></ion-input>
-    </ion-item>
+    </ion-item> -->
 
-    <ion-item>
-      <ion-label position="floating">Description</ion-label>
-      <ion-input type="text" formControlName="description" class="form-controll"></ion-input>
-    </ion-item>
-
-    <ion-button type="submit" expand="block" [disabled]="!lostDocForm.valid">Submit and take a Picture</ion-button>
+    <ion-button type="submit" expand="block" [disabled]="!deviceForm.valid"
+      >Submit and upload image</ion-button
+    >
   </form>
 </ion-content>

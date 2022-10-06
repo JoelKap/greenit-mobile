@@ -12,25 +12,28 @@ export class ViewPicturePage implements OnInit {
   id: any;
   imageUrl = '';
 
-  constructor(private route: ActivatedRoute,
+  constructor(
+    private route: ActivatedRoute,
     private storage: AngularFireStorage,
-    public loadingController: LoadingController,) { }
+    public loadingController: LoadingController
+  ) {}
 
   ngOnInit() {
-    this.loadDocumentPicture();
+    this.loadDevicePicture();
   }
 
-  async loadDocumentPicture() {
+  async loadDevicePicture() {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
-      duration: 2000
+      duration: 2000,
     });
     await loading.present();
+    debugger;
     const id = localStorage.getItem('id');
-    const downloadURL = this.storage.ref(`/documentFiles/${id}`).getDownloadURL();
+    const downloadURL = this.storage.ref(`/deviceFiles/${id}`).getDownloadURL();
 
-    downloadURL.subscribe(url => {
+    downloadURL.subscribe((url) => {
       if (url) {
         loading.dismiss();
         this.imageUrl = url;

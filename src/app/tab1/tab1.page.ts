@@ -1,29 +1,32 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Platform } from '@ionic/angular';
-import { AlertController, LoadingController, NavController, ToastController } from '@ionic/angular';
+
+import {
+  AlertController,
+  LoadingController,
+  NavController,
+  ToastController,
+} from '@ionic/angular';
 import { LostItemService } from '../service/lost-item.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { AuthenticationService } from '../services/authentication.service';
 import * as _ from 'lodash';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { addDoc } from 'firebase/firestore';
-import { async, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss']
+  styleUrls: ['tab1.page.scss'],
 })
-export class Tab1Page implements OnInit, OnDestroy {
-  docs$: any;
+export class Tab1Page implements OnInit {
+  devices$: any;
   term = '';
   photo: any;
-  pipe = new DatePipe('en-US')
-  lostDocs: any[] = [];
-  lostDocsLodash: any[] = [];
+  pipe = new DatePipe('en-US');
+  devices: any[] = [];
+  devicesLodash: any[] = [];
   selectedDoc: any = {};
   constructor(
     public firestore: AngularFirestore,
@@ -33,50 +36,53 @@ export class Tab1Page implements OnInit, OnDestroy {
     public alertController: AlertController,
     public loadingController: LoadingController,
     private authService: AuthenticationService,
-    private lostServ: LostItemService) { }
-
-  ngOnDestroy(): void {
-    //  this.docs$.unsubscribe()
-  }
+    private lostServ: LostItemService
+  ) {}
 
   async ngOnInit(): Promise<void> {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
-      duration: 2000
+      duration: 2000,
     });
     await loading.present();
 
-    this.docs$ = this.lostServ.getLostDocs();
-    this.docs$.forEach((docs) => {
+    const email = localStorage.getItem('userEmail');
+    this.devices$ = this.lostServ.getUserDevices(email);
+    this.devices$.forEach((device) => {
       loading.dismiss();
       let arr = [];
-      this.lostDocs.length = 0;
-      this.lostDocsLodash.length = 0;
-      arr = docs;
-      arr.forEach((doc) => {
-        this.storage.ref(`/documentFiles/${doc.id}`).getDownloadURL().toPromise().then((url) => {
-          if (url) {
-            doc.imageUrl = url;
-          }
-        });
-      })
-      this.lostDocsLodash = _.orderBy(arr, ['createdAt'], ['desc']);
-      this.lostDocs.push.apply(this.lostDocs, this.lostDocsLodash);
-    })
+      this.devices.length = 0;
+      this.devicesLodash.length = 0;
+      arr = device;
+      arr.forEach((device) => {
+        this.storage
+          .ref(`/deviceFiles/${device.id}`)
+          .getDownloadURL()
+          .toPromise()
+          .then((url) => {
+            if (url) {
+              device.imageUrl = url;
+            }
+          });
+      });
+      this.devicesLodash = _.orderBy(arr, ['createdAt'], ['desc']);
+      this.devices.push.apply(this.devices, this.devicesLodash);
+    });
   }
 
-  async addDoc() {
+  async addDevice() {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
-      duration: 2000
+      duration: 2000,
     });
     await loading.present();
 
-    this.firestore.collection('users', (ref) => ref
-      .where('email', '==', localStorage.getItem('userEmail'))
-      .limit(1))
+    this.firestore
+      .collection('users', (ref) =>
+        ref.where('email', '==', localStorage.getItem('userEmail')).limit(1)
+      )
       .get()
       .subscribe(async (user) => {
         if (user.size > 0) {
@@ -86,58 +92,56 @@ export class Tab1Page implements OnInit, OnDestroy {
             this.alertController
               .create({
                 header: 'User Profile',
-                message: 'It appears we needs more of your info, Please click ok to proceed',
+                message:
+                  'It appears we needs more of your info, Please click ok to proceed',
                 buttons: [
                   {
                     text: 'OK',
                     handler: () => resolve(this.navigateTo()),
-                  }
-                ]
+                  },
+                ],
               })
-              .then(alert => {
+              .then((alert) => {
                 alert.present();
               });
           });
         }
-      })
+      });
   }
 
   navigateTo() {
     this.router.navigateByUrl('/user-more-info');
   }
 
-  async viewDoc(document: any) {
+  async viewDevice(document: any) {
     this.selectedDoc = document;
     return new Promise((resolve, reject) => {
-      const dateFound = this.pipe.transform(document.dateFound, 'short')
+      const datePurchased = this.pipe.transform(
+        document.datePurchased,
+        'short'
+      );
       this.alertController
         .create({
           header: document.documentType,
-          message:
-            `Firstname: ${document.firstname} 
-          Lastname: ${document.lastname} 
-          Description: ${document.description}
-          Date found: ${dateFound}`,
+          message: `Condition: ${document.deviceCondition}
+          Emei: ${document.imei}
+          Date purchased: ${datePurchased}`,
           buttons: [
             {
-              text: 'Cancel',
+              text: 'Close',
               role: 'cancel',
               cssClass: 'primary',
-              handler: () => reject(this.updateFoundDocument(false))
+              handler: () => reject(this.updateFoundDocument(false)),
             },
             {
-              text: 'Pictures',
+              text: 'View',
               role: 'Pictures',
               cssClass: 'secondary',
-              handler: () => resolve(this.viewPicture(document))
+              handler: () => resolve(this.viewPicture(document)),
             },
-            {
-              text: 'Found',
-              handler: () => resolve(this.updateFoundDocument(true))
-            }
-          ]
+          ],
         })
-        .then(alert => {
+        .then((alert) => {
           alert.present();
         });
     });
@@ -151,7 +155,11 @@ export class Tab1Page implements OnInit, OnDestroy {
   updateFoundDocument(val) {
     const type = 'found';
     if (val) {
-      this.lostServ.checkIfUserProfile(localStorage.getItem('userEmail'), type, this.selectedDoc)
+      this.lostServ.checkIfUserProfile(
+        localStorage.getItem('userEmail'),
+        type,
+        this.selectedDoc
+      );
     }
     return;
   }

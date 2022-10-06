@@ -4,7 +4,12 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { LoadingController, ModalController, NavController, ToastController } from '@ionic/angular';
+import {
+  LoadingController,
+  ModalController,
+  NavController,
+  ToastController,
+} from '@ionic/angular';
 import { take } from 'rxjs/operators';
 import { LostItemService } from '../service/lost-item.service';
 
@@ -15,8 +20,9 @@ import { LostItemService } from '../service/lost-item.service';
 })
 export class AddLostItemPage implements OnInit, OnDestroy {
   users$: any;
-  lostDocForm: FormGroup;
-  selectedDocumentType: any;
+  deviceForm: FormGroup;
+  selectedDeviceBrand: any;
+  selectedDeviceCondition: any;
 
   constructor(
     public firestore: AngularFirestore,
@@ -28,24 +34,23 @@ export class AddLostItemPage implements OnInit, OnDestroy {
     public loadingController: LoadingController,
     private lostDocService: LostItemService,
     private toastController: ToastController,
-    private router: Router) { }
-
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.lostDocForm = this.fb.group({
-      documentType: [''],
-      dateFound: [''],
+    this.deviceForm = this.fb.group({
+      deviceBrand: [''],
+      deviceCondition: [''],
+      owner: [''],
+      datePurchased: [''],
       createdAt: [''],
-      idNumber: [''],
-      firstname: [''],
-      lastname: [''],
-      address: [''],
-      foundBy: [''],
-      referenceNumber: [''],
+      deviceModel: [''],
+      price: [''],
+      imei: [''],
       description: [''],
       isDeleted: [Boolean],
       isFound: [Boolean],
-      email: ['']
+      email: [''],
     });
   }
 
@@ -56,33 +61,44 @@ export class AddLostItemPage implements OnInit, OnDestroy {
   }
 
   async saveFoundDoc() {
-    this.lostDocForm.controls['documentType'].setValue(this.selectedDocumentType);
-    this.lostDocForm.controls['createdAt'].setValue(new Date());
-    this.lostDocForm.controls['isDeleted'].setValue(false);
-    this.lostDocForm.controls['isFound'].setValue(false);
-    this.lostDocForm.controls['foundBy'].setValue('');
-    this.lostDocForm.controls['email'].setValue(localStorage.getItem('userEmail'));
+    this.deviceForm.controls['deviceBrand'].setValue(this.selectedDeviceBrand);
+    this.deviceForm.controls['deviceCondition'].setValue(
+      this.selectedDeviceCondition
+    );
+    this.deviceForm.controls['createdAt'].setValue(new Date());
+    this.deviceForm.controls['isDeleted'].setValue(false);
+    this.deviceForm.controls['isFound'].setValue(false);
+    this.deviceForm.controls['owner'].setValue('');
+    this.deviceForm.controls['email'].setValue(
+      localStorage.getItem('userEmail')
+    );
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
-      duration: 2000
+      duration: 2000,
     });
     await loading.present();
-    debugger;
-    const subs$ = this.lostDocService.getFoundBy(localStorage.getItem('userEmail'));
+    const subs$ = this.lostDocService.getFoundBy(
+      localStorage.getItem('userEmail')
+    );
     this.users$ = subs$.pipe(take(1)).subscribe((users) => {
       debugger;
       const id = this.firestore.createId();
-      this.lostDocForm.controls['foundBy'].setValue(users[0].name + ' ' + users[0].lastname);
-      this.firestore.doc(`lostDocuments/${id}`).set({
-        id,
-        ...this.lostDocForm.value
-      }).then((res) => {
-        debugger;
-        loading.dismiss();
-        this.initializePreview(id);
-      });
-    })
+      this.deviceForm.controls['owner'].setValue(
+        users[0].name + ' ' + users[0].lastname
+      );
+      this.firestore
+        .doc(`devices/${id}`)
+        .set({
+          id,
+          ...this.deviceForm.value,
+        })
+        .then((res) => {
+          debugger;
+          loading.dismiss();
+          this.initializePreview(id);
+        });
+    });
     // this.lostDocService.saveFoundDoc(this.lostDocForm.value);
   }
 
@@ -93,27 +109,31 @@ export class AddLostItemPage implements OnInit, OnDestroy {
       encodingType: this.camera.EncodingType.JPEG,
       sourceType: this.camera.PictureSourceType.CAMERA,
       mediaType: this.camera.MediaType.PICTURE,
-      correctOrientation: true
-    }
+      correctOrientation: true,
+    };
     return this.camera.getPicture(options).then(async (imageData) => {
       debugger;
       const toast = await this.toastController.create({
-        message: 'Document saved successfully!',
+        message: 'Device saved successfully!',
         duration: 2000,
       });
       toast.present();
       const photo = `data:image/jpeg;base64,${imageData}`;
-      var uploadTask = this.storage.ref(`documentFiles/${id}`);
+      var uploadTask = this.storage.ref(`deviceFiles/${id}`);
       uploadTask.putString(photo, 'data_url');
       //this.navCtrl.navigateForward([`/tabs/tab${1}`]);
       this.router.navigateByUrl('/tabs', { replaceUrl: true });
-      // this.modalController.dismiss({
-      //   'dismissed': true
-      // });
+      this.modalController.dismiss({
+        dismissed: true,
+      });
     });
   }
 
-  onDocumentChaged(event): void {
-    this.selectedDocumentType = event.detail.value;
+  onBrandChanged(event): void {
+    this.selectedDeviceBrand = event.detail.value;
+  }
+
+  onConditionChanged(event): void {
+    this.selectedDeviceCondition = event.detail.value;
   }
 }
