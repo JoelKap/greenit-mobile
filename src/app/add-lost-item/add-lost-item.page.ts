@@ -11,7 +11,7 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { take } from 'rxjs/operators';
-import { LostItemService } from '../service/lost-item.service';
+import { LostItemService } from '../service/device.service';
 
 @Component({
   selector: 'app-add-lost-item',

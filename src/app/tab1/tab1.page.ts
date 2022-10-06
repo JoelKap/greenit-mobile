@@ -8,7 +8,7 @@ import {
   NavController,
   ToastController,
 } from '@ionic/angular';
-import { LostItemService } from '../service/lost-item.service';
+import { LostItemService } from '../service/device.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { AuthenticationService } from '../services/authentication.service';

@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoadingController, NavController } from '@ionic/angular';
-import { LostItemService } from '../service/lost-item.service';
+import { LostItemService } from '../service/device.service';
 import * as _ from 'lodash';
 
 @Component({
@@ -13,18 +13,21 @@ import * as _ from 'lodash';
 export class ChatPage implements OnInit {
   messages: any = [];
   document: any = {};
-  pipe = new DatePipe('en-US')
+  pipe = new DatePipe('en-US');
   chatForm: FormGroup;
 
-  constructor(private lostServ: LostItemService,
+  constructor(
+    private lostServ: LostItemService,
     private fb: FormBuilder,
     private navCtrl: NavController,
-    public loadingController: LoadingController) { }
+    public loadingController: LoadingController
+  ) {}
 
   async ngOnInit() {
     this.createchatForm();
     this.document = this.lostServ.getDocFromStore();
-    if(_.isEmpty(this.document)) return this.navCtrl.navigateForward([`/tabs/tab${2}`]);
+    if (_.isEmpty(this.document))
+      return this.navCtrl.navigateForward([`/tabs/tab${2}`]);
 
     await this.loadUserChats();
   }
@@ -35,11 +38,11 @@ export class ChatPage implements OnInit {
       text: this.chatForm.controls['message'].value,
       created: new Date(),
       chatId: this.document.lostId,
-    }
+    };
     this.chatForm.reset();
     this.lostServ.sendMessage(message).then((resp) => {
       this.loadUserChats();
-    })
+    });
   }
 
   private createchatForm() {
@@ -52,7 +55,7 @@ export class ChatPage implements OnInit {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
-      duration: 2000
+      duration: 2000,
     });
     await loading.present();
     this.lostServ.getUserChats(this.document.lostId).subscribe((resp) => {
