@@ -8,10 +8,18 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form class="form" [formGroup]="userForm" (ngSubmit)="register(userForm.value)">
+  <form
+    class="form"
+    [formGroup]="userForm"
+    (ngSubmit)="register(userForm.value)"
+  >
     <ion-item>
       <ion-label position="floating">Email</ion-label>
-      <ion-input type="text" disabled="true" formControlName="email"></ion-input>
+      <ion-input
+        type="text"
+        [disabled]="true"
+        formControlName="email"
+      ></ion-input>
     </ion-item>
 
     <ion-item>
@@ -21,58 +29,85 @@
 
     <ng-container *ngFor="let error of error_msg.name">
       <div
-        *ngIf="userForm.get('name').hasError(error.type) && (userForm.get('name').dirty || userForm.get('name').touched)">
+        *ngIf="userForm.get('name').hasError(error.type) && (userForm.get('name').dirty || userForm.get('name').touched)"
+      >
         {{ error.message }}
       </div>
     </ng-container>
 
     <ion-item>
       <ion-label position="floating">Last Name</ion-label>
-      <ion-input type="text" formControlName="lastname" class="form-controll" required></ion-input>
+      <ion-input
+        type="text"
+        formControlName="lastname"
+        class="form-controll"
+        required
+      ></ion-input>
     </ion-item>
 
     <ng-container *ngFor="let error of error_msg.lastname">
       <div
-        *ngIf="userForm.get('lastname').hasError(error.type) && (userForm.get('lastname').dirty || userForm.get('lastname').touched)">
+        *ngIf="userForm.get('lastname').hasError(error.type) && (userForm.get('lastname').dirty || userForm.get('lastname').touched)"
+      >
         {{ error.message }}
       </div>
     </ng-container>
 
     <ion-item>
       <ion-label position="floating">Identity Number</ion-label>
-      <ion-input type="Number" formControlName="idnumber" class="form-controll" required></ion-input>
+      <ion-input
+        type="Number"
+        formControlName="idnumber"
+        class="form-controll"
+        required
+      ></ion-input>
     </ion-item>
 
     <ng-container *ngFor="let error of error_msg.idnumber">
       <div
-        *ngIf="userForm.get('idnumber').hasError(error.type) && (userForm.get('idnumber').dirty || userForm.get('idnumber').touched)">
+        *ngIf="userForm.get('idnumber').hasError(error.type) && (userForm.get('idnumber').dirty || userForm.get('idnumber').touched)"
+      >
         {{ error.message }}
       </div>
     </ng-container>
 
     <ion-item>
       <ion-label position="floating">Cellphone</ion-label>
-      <ion-input type="text" formControlName="cellphone" class="form-controll" required></ion-input>
+      <ion-input
+        type="text"
+        formControlName="cellphone"
+        class="form-controll"
+        required
+      ></ion-input>
     </ion-item>
     <ng-container *ngFor="let error of error_msg.cellphone">
       <div
-        *ngIf="userForm.get('cellphone').hasError(error.type) && (userForm.get('cellphone').dirty || userForm.get('cellphone').touched)">
+        *ngIf="userForm.get('cellphone').hasError(error.type) && (userForm.get('cellphone').dirty || userForm.get('cellphone').touched)"
+      >
         {{ error.message }}
       </div>
     </ng-container>
 
     <ion-item>
       <ion-label position="floating">Address</ion-label>
-      <ion-input type="text" formControlName="address" class="form-controll" required></ion-input>
+      <ion-input
+        type="text"
+        formControlName="address"
+        class="form-controll"
+        required
+      ></ion-input>
     </ion-item>
     <ng-container *ngFor="let error of error_msg.address">
       <div
-        *ngIf="userForm.get('address').hasError(error.type) && (userForm.get('address').dirty || userForm.get('address').touched)">
+        *ngIf="userForm.get('address').hasError(error.type) && (userForm.get('address').dirty || userForm.get('address').touched)"
+      >
         {{ error.message }}
       </div>
-    </ng-container>    
+    </ng-container>
 
-    <ion-button type="submit" expand="block" [disabled]="!userForm.valid">Register</ion-button>
+    <ion-button type="submit" expand="block" [disabled]="!userForm.valid"
+      >Register</ion-button
+    >
 
     <label class="ion-text-center" color="danger">{{errorMsg}}</label>
     <label class="ion-text-center" color="success">{{successMsg}}</label>
