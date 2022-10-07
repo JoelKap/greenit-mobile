@@ -4,9 +4,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { AddLostItemPageRoutingModule } from './add-lost-item-routing.module';
+import { AddLostItemPageRoutingModule } from './add-device-routing.module';
 
-import { AddLostItemPage } from './add-lost-item.page';
+import { AddDevicePage } from './add-device.page';
 
 @NgModule({
   imports: [
@@ -14,8 +14,8 @@ import { AddLostItemPage } from './add-lost-item.page';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    AddLostItemPageRoutingModule
+    AddLostItemPageRoutingModule,
   ],
-  declarations: [AddLostItemPage]
+  declarations: [AddDevicePage],
 })
 export class AddLostItemPageModule {}

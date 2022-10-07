@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AddLostItemPage } from './add-lost-item.page';
+import { AddDevicePage } from './add-device.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: AddLostItemPage
-  }
+    component: AddDevicePage,
+  },
 ];
 
 @NgModule({

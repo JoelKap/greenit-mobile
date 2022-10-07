@@ -12,12 +12,12 @@ import {
 } from '@ionic/angular';
 import 'firebase/firestore';
 import { Observable } from 'rxjs';
-import { AddLostItemPage } from '../add-lost-item/add-lost-item.page';
+import { AddDevicePage } from '../add-device/add-device.page';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LostItemHttp {
+export class DeviceHttp {
   constructor(
     public firestore: AngularFirestore,
     public modalController: ModalController,
@@ -76,6 +76,29 @@ export class LostItemHttp {
           });
         }
       });
+  }
+
+  getUserDevices(email: string): Observable<any[]> {
+    return this.firestore
+      .collection<any>(`devices`, (ref) => ref.where('email', '==', email))
+      .valueChanges();
+  }
+
+  getMarketDevices(): Observable<any[]> {
+    return this.firestore
+      .collection<any>(`devices`, (ref) =>
+        ref.where('isForSale', '==', true).where('saleStatus', '!=', 'SOLD')
+      )
+      .valueChanges();
+  }
+
+  async removeDeviceFromSale(doc: any): Promise<any> {
+    try {
+      await this.firestore.collection('devices').doc(doc.id).update(doc);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async saveFoundDoc(doc: any): Promise<any> {
@@ -139,12 +162,6 @@ export class LostItemHttp {
       .catch(() => {
         return false;
       });
-  }
-
-  getUserDevices(email: string): Observable<any[]> {
-    return this.firestore
-      .collection<any>(`devices`, (ref) => ref.where('email', '==', email))
-      .valueChanges();
   }
 
   getmatchedDocs(email: string) {

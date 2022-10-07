@@ -29,7 +29,6 @@ export class ViewPicturePage implements OnInit {
       duration: 2000,
     });
     await loading.present();
-    debugger;
     const id = localStorage.getItem('id');
     const downloadURL = this.storage.ref(`/deviceFiles/${id}`).getDownloadURL();
 

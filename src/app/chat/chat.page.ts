@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoadingController, NavController } from '@ionic/angular';
-import { LostItemService } from '../service/device.service';
+import { DeviceService } from '../service/device.service';
 import * as _ from 'lodash';
 
 @Component({
@@ -17,7 +17,7 @@ export class ChatPage implements OnInit {
   chatForm: FormGroup;
 
   constructor(
-    private lostServ: LostItemService,
+    private lostServ: DeviceService,
     private fb: FormBuilder,
     private navCtrl: NavController,
     public loadingController: LoadingController

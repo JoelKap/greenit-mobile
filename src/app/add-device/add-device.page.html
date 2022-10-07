@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <form class="form" [formGroup]="deviceForm" (ngSubmit)="saveFoundDoc()">
+  <form class="form" [formGroup]="deviceForm" (ngSubmit)="saveDevice()">
     <ion-item>
       <ion-label>Brand</ion-label>
       <ion-select
@@ -39,6 +39,17 @@
         <ion-select-option value="Used-New">Used - Like New</ion-select-option>
         <ion-select-option value="Used-Good">Used - Good</ion-select-option>
         <ion-select-option value="Used-Fair">Used- Fair</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Is device for sale</ion-label>
+      <ion-select
+        placeholder="Is for sale"
+        (ionChange)="onIsForSaleChanged($event)"
+      >
+        <ion-select-option value="Yes">Yes</ion-select-option>
+        <ion-select-option value="No">No</ion-select-option>
       </ion-select>
     </ion-item>
 

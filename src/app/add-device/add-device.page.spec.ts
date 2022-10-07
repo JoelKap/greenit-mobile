@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { AddLostItemPage } from './add-lost-item.page';
+import { AddDevicePage } from './add-device.page';
 
 describe('AddLostItemPage', () => {
-  let component: AddLostItemPage;
-  let fixture: ComponentFixture<AddLostItemPage>;
+  let component: AddDevicePage;
+  let fixture: ComponentFixture<AddDevicePage>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddLostItemPage ],
-      imports: [IonicModule.forRoot()]
+      declarations: [AddDevicePage],
+      imports: [IonicModule.forRoot()],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AddLostItemPage);
+    fixture = TestBed.createComponent(AddDevicePage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

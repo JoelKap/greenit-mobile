@@ -8,36 +8,49 @@ const routes: Routes = [
   { path: '', redirectTo: 'intro', pathMatch: 'full' },
   {
     path: 'intro',
-    loadChildren: () => import('./intro/intro.module').then( m => m.IntroPageModule)
+    loadChildren: () =>
+      import('./intro/intro.module').then((m) => m.IntroPageModule),
   },
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule),
+    loadChildren: () =>
+      import('./login/login.module').then((m) => m.LoginPageModule),
     // canLoad: [IntroGuard]
   },
   {
     path: 'tabs',
-    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
-    canLoad: [AuthGuard]
+    loadChildren: () =>
+      import('./tabs/tabs.module').then((m) => m.TabsPageModule),
+    canLoad: [AuthGuard],
   },
   {
     path: 'registration',
-    loadChildren: () => import('./registration/registration.module').then(m => m.RegistrationPageModule)
+    loadChildren: () =>
+      import('./registration/registration.module').then(
+        (m) => m.RegistrationPageModule
+      ),
   },
   {
     path: 'user-more-info',
-    loadChildren: () => import('./user-more-info/user-more-info.module').then( m => m.UserMoreInfoPageModule),
-    canLoad: [AuthGuard]
+    loadChildren: () =>
+      import('./user-more-info/user-more-info.module').then(
+        (m) => m.UserMoreInfoPageModule
+      ),
+    canLoad: [AuthGuard],
   },
   {
     path: 'add-lost-item',
-    loadChildren: () => import('./add-lost-item/add-lost-item.module').then( m => m.AddLostItemPageModule),
-    canLoad: [AuthGuard]
+    loadChildren: () =>
+      import('./add-device/add-device.module').then(
+        (m) => m.AddLostItemPageModule
+      ),
+    canLoad: [AuthGuard],
   },
   {
     path: 'chat',
-    loadChildren: () => import('./chat/chat.module').then( m => m.ChatPageModule),
-    canLoad: [AuthGuard]
+    loadChildren: () =>
+      import('./chat/chat.module').then((m) => m.ChatPageModule),
+    canLoad: [AuthGuard],
   },
   // {
   //   path: 'login',
@@ -46,23 +59,29 @@ const routes: Routes = [
   // },
   {
     path: 'view-picture',
-    loadChildren: () => import('./view-picture/view-picture.module').then( m => m.ViewPicturePageModule),
-    canLoad: [AuthGuard]
+    loadChildren: () =>
+      import('./view-picture/view-picture.module').then(
+        (m) => m.ViewPicturePageModule
+      ),
+    canLoad: [AuthGuard],
   },
   {
     path: 'forget-password',
-    loadChildren: () => import('./forget-password/forget-password.module').then( m => m.ForgetPasswordPageModule)
+    loadChildren: () =>
+      import('./forget-password/forget-password.module').then(
+        (m) => m.ForgetPasswordPageModule
+      ),
   },
   {
     path: '',
     redirectTo: '/login',
-    pathMatch: 'full'
-  }
+    pathMatch: 'full',
+  },
 ];
 @NgModule({
   imports: [
-    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules }),
   ],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

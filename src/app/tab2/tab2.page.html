@@ -1,7 +1,48 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title style="font-size: small"> Buy or Sell device </ion-title>
+    <ion-title style="font-size: small"> Buy or Sale device </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true"> </ion-content>
+<ion-content [fullscreen]="true">
+  <ion-fab vertical="top" horizontal="end" edge slot="fixed">
+    <ion-fab-button (click)="addDevice()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ion-searchbar
+    placeholder="Filter"
+    showCancelButton="focus"
+    [(ngModel)]="term"
+    animated="true"
+  ></ion-searchbar>
+
+  <ion-card color="light" *ngFor="let device of devices | filter:term">
+    <div
+      class="img-wrapper"
+      (click)="viewDevice(device)"
+      style="padding-top: 15px"
+    >
+      <img *ngIf="!device.imageUrl" src="../../assets/images/no_image.png" />
+      <img *ngIf="device.imageUrl" [src]="device.imageUrl" />
+      <ion-button color="light">
+        <ion-icon slot="icon-only" name="camera-outline" color="medium">
+        </ion-icon>
+      </ion-button>
+    </div>
+    <ion-card-content class="ion-text-center" style="margin-bottom: 40px">
+      <h2>{{device.deviceBrand}} {{device.deviceModel}}</h2>
+      <ion-text color="medium">
+        <div style="display: flex" class="ion-justify-content-center">
+          <p>R {{device.price}}</p>
+        </div>
+      </ion-text>
+      <label vertical="left" style="font-size: 12px"
+        >Posted By: {{seller}}</label
+      ><br />
+      <label vertical="left" style="font-size: 12px"
+        >Posted On: {{device.createdAt | date}}</label
+      >
+    </ion-card-content>
+  </ion-card>
+</ion-content>

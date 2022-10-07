@@ -11,18 +11,19 @@ import {
   ToastController,
 } from '@ionic/angular';
 import { take } from 'rxjs/operators';
-import { LostItemService } from '../service/device.service';
+import { DeviceService } from '../service/device.service';
 
 @Component({
-  selector: 'app-add-lost-item',
-  templateUrl: './add-lost-item.page.html',
-  styleUrls: ['./add-lost-item.page.scss'],
+  selector: 'app-add-device',
+  templateUrl: './add-device.page.html',
+  styleUrls: ['./add-device.page.scss'],
 })
-export class AddLostItemPage implements OnInit, OnDestroy {
+export class AddDevicePage implements OnInit, OnDestroy {
   users$: any;
   deviceForm: FormGroup;
   selectedDeviceBrand: any;
   selectedDeviceCondition: any;
+  selectedIsForSale: any;
 
   constructor(
     public firestore: AngularFirestore,
@@ -32,7 +33,7 @@ export class AddLostItemPage implements OnInit, OnDestroy {
     public modalController: ModalController,
     private fb: FormBuilder,
     public loadingController: LoadingController,
-    private lostDocService: LostItemService,
+    private lostDocService: DeviceService,
     private toastController: ToastController,
     private router: Router
   ) {}
@@ -50,6 +51,8 @@ export class AddLostItemPage implements OnInit, OnDestroy {
       description: [''],
       isDeleted: [Boolean],
       isFound: [Boolean],
+      isForSale: [Boolean],
+      saleStatus: [''],
       email: [''],
     });
   }
@@ -60,7 +63,7 @@ export class AddLostItemPage implements OnInit, OnDestroy {
     }
   }
 
-  async saveFoundDoc() {
+  async saveDevice() {
     this.deviceForm.controls['deviceBrand'].setValue(this.selectedDeviceBrand);
     this.deviceForm.controls['deviceCondition'].setValue(
       this.selectedDeviceCondition
@@ -68,6 +71,8 @@ export class AddLostItemPage implements OnInit, OnDestroy {
     this.deviceForm.controls['createdAt'].setValue(new Date());
     this.deviceForm.controls['isDeleted'].setValue(false);
     this.deviceForm.controls['isFound'].setValue(false);
+    this.deviceForm.controls['isForSale'].setValue(this.selectedIsForSale);
+    this.deviceForm.controls['saleStatus'].setValue('');
     this.deviceForm.controls['owner'].setValue('');
     this.deviceForm.controls['email'].setValue(
       localStorage.getItem('userEmail')
@@ -82,7 +87,6 @@ export class AddLostItemPage implements OnInit, OnDestroy {
       localStorage.getItem('userEmail')
     );
     this.users$ = subs$.pipe(take(1)).subscribe((users) => {
-      debugger;
       const id = this.firestore.createId();
       this.deviceForm.controls['owner'].setValue(
         users[0].name + ' ' + users[0].lastname
@@ -94,12 +98,10 @@ export class AddLostItemPage implements OnInit, OnDestroy {
           ...this.deviceForm.value,
         })
         .then((res) => {
-          debugger;
           loading.dismiss();
           this.initializePreview(id);
         });
     });
-    // this.lostDocService.saveFoundDoc(this.lostDocForm.value);
   }
 
   initializePreview(id) {
@@ -112,7 +114,6 @@ export class AddLostItemPage implements OnInit, OnDestroy {
       correctOrientation: true,
     };
     return this.camera.getPicture(options).then(async (imageData) => {
-      debugger;
       const toast = await this.toastController.create({
         message: 'Device saved successfully!',
         duration: 2000,
@@ -135,5 +136,14 @@ export class AddLostItemPage implements OnInit, OnDestroy {
 
   onConditionChanged(event): void {
     this.selectedDeviceCondition = event.detail.value;
+  }
+
+  onIsForSaleChanged(event): void {
+    debugger;
+    if (event.detail.value === 'Yes') {
+      this.selectedIsForSale = true;
+    } else {
+      this.selectedIsForSale = false;
+    }
   }
 }

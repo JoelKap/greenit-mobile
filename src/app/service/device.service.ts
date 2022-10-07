@@ -1,22 +1,79 @@
 import { Injectable } from '@angular/core';
-import { LostItemHttp } from '../http/lost-item.http';
+import { DeviceHttp } from '../http/device.http';
 
 @Injectable({
   providedIn: 'root',
 })
-export class LostItemService {
+export class DeviceService {
   document: any = {};
-  constructor(private lostItemHttp: LostItemHttp) {}
+  constructor(private deviceHttp: DeviceHttp) {}
 
   async checkIfUserProfile(email: any, type: string, selectedDoc: any) {
-    return await this.lostItemHttp.checkIfUserProfile(email, type, selectedDoc);
+    return await this.deviceHttp.checkIfUserProfile(email, type, selectedDoc);
   }
 
-  saveFoundDoc(doc: any) {
-    return this.lostItemHttp.saveFoundDoc(doc);
+  getMarketDevices() {
+    return this.deviceHttp.getMarketDevices();
   }
 
   getUserDevices(email: string) {
-    return this.lostItemHttp.getUserDevices(email);
+    return this.deviceHttp.getUserDevices(email);
+  }
+
+  removeDeviceFromSale(doc: any) {
+    return this.deviceHttp.removeDeviceFromSale(doc);
+  }
+
+  saveFoundDoc(doc: any) {
+    return this.deviceHttp.saveFoundDoc(doc);
+  }
+
+  saveDocToStore(doc: any) {
+    this.document = doc;
+  }
+
+  getDocFromStore() {
+    return this.document;
+  }
+
+  getmatchedDocs(email: string) {
+    return this.deviceHttp.getmatchedDocs(email);
+  }
+
+  deleteDoc(doc: any) {
+    return this.deviceHttp.deleteDoc(doc);
+  }
+
+  getFoundBy(email: any) {
+    return this.deviceHttp.getFoundBy(email);
+  }
+
+  saveMatchDoc(selectedDoc: any) {
+    return this.deviceHttp.saveMatchDoc(selectedDoc);
+  }
+
+  updateDoc(selectedDoc: any) {
+    return this.deviceHttp.updateDoc(selectedDoc);
+  }
+
+  getUserChats(id: any) {
+    return this.deviceHttp.getUserChats(id);
+  }
+
+  sendMessage(message: {
+    from: string;
+    text: string;
+    created: Date;
+    chatId: any;
+  }) {
+    return this.deviceHttp.sendMessage(message);
+  }
+
+  getChatlostDocs(email: string) {
+    return this.deviceHttp.getChatlostDocs(email);
+  }
+
+  getFoundDocuments(lostId: any) {
+    return this.deviceHttp.getFoundDocuments(lostId);
   }
 }

@@ -18,10 +18,14 @@
   ></ion-searchbar>
 
   <ion-card color="light" *ngFor="let device of devices | filter:term">
-    <div class="img-wrapper" style="padding-top: 15px">
+    <div
+      class="img-wrapper"
+      (click)="viewDevice(device)"
+      style="padding-top: 15px"
+    >
       <img *ngIf="!device.imageUrl" src="../../assets/images/no_image.png" />
       <img *ngIf="device.imageUrl" [src]="device.imageUrl" />
-      <ion-button color="light" (click)="viewDevice(device)">
+      <ion-button color="light">
         <ion-icon slot="icon-only" name="camera-outline" color="medium">
         </ion-icon>
       </ion-button>

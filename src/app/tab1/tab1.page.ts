@@ -8,7 +8,7 @@ import {
   NavController,
   ToastController,
 } from '@ionic/angular';
-import { LostItemService } from '../service/device.service';
+import { DeviceService } from '../service/device.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { AuthenticationService } from '../services/authentication.service';
@@ -36,7 +36,7 @@ export class Tab1Page implements OnInit {
     public alertController: AlertController,
     public loadingController: LoadingController,
     private authService: AuthenticationService,
-    private lostServ: LostItemService
+    private deviceService: DeviceService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -48,7 +48,7 @@ export class Tab1Page implements OnInit {
     await loading.present();
 
     const email = localStorage.getItem('userEmail');
-    this.devices$ = this.lostServ.getUserDevices(email);
+    this.devices$ = this.deviceService.getUserDevices(email);
     this.devices$.forEach((device) => {
       loading.dismiss();
       let arr = [];
@@ -115,36 +115,79 @@ export class Tab1Page implements OnInit {
 
   async viewDevice(document: any) {
     this.selectedDoc = document;
-    return new Promise((resolve, reject) => {
-      const datePurchased = this.pipe.transform(
-        document.datePurchased,
-        'short'
-      );
-      this.alertController
-        .create({
-          header: document.documentType,
-          message: `Condition: ${document.deviceCondition}
-          Emei: ${document.imei}
-          Date purchased: ${datePurchased}`,
-          buttons: [
-            {
-              text: 'Close',
-              role: 'cancel',
-              cssClass: 'primary',
-              handler: () => reject(this.updateFoundDocument(false)),
-            },
-            {
-              text: 'View',
-              role: 'Pictures',
-              cssClass: 'secondary',
-              handler: () => resolve(this.viewPicture(document)),
-            },
-          ],
-        })
-        .then((alert) => {
-          alert.present();
-        });
-    });
+    if (document.isForSale == false) {
+      return new Promise((resolve, reject) => {
+        const datePurchased = this.pipe.transform(
+          document.datePurchased,
+          'short'
+        );
+        this.alertController
+          .create({
+            header: document.documentType,
+            message: `Condition: ${document.deviceCondition}
+              Emei: ${document.imei}
+              Date purchased: ${datePurchased}`,
+            buttons: [
+              {
+                text: 'Close',
+                role: 'cancel',
+                cssClass: 'primary',
+                handler: () => reject(this.updateFoundDocument(false)),
+              },
+              {
+                text: 'View',
+                role: 'Pictures',
+                cssClass: 'secondary',
+                handler: () => resolve(this.viewPicture(document)),
+              },
+              {
+                text: 'Add sale',
+                handler: () =>
+                  resolve(this.AddRemoveSaleDevice(document, true)),
+              },
+            ],
+          })
+          .then((alert) => {
+            alert.present();
+          });
+      });
+    } else {
+      return new Promise((resolve, reject) => {
+        const datePurchased = this.pipe.transform(
+          document.datePurchased,
+          'short'
+        );
+        this.alertController
+          .create({
+            header: document.documentType,
+            message: `Condition: ${document.deviceCondition}
+              Emei: ${document.imei}
+              Date purchased: ${datePurchased}`,
+            buttons: [
+              {
+                text: 'Close',
+                role: 'cancel',
+                cssClass: 'primary',
+                handler: () => reject(this.updateFoundDocument(false)),
+              },
+              {
+                text: 'View',
+                role: 'Pictures',
+                cssClass: 'secondary',
+                handler: () => resolve(this.viewPicture(document)),
+              },
+              {
+                text: 'Remove sale',
+                handler: () =>
+                  resolve(this.AddRemoveSaleDevice(document, false)),
+              },
+            ],
+          })
+          .then((alert) => {
+            alert.present();
+          });
+      });
+    }
   }
 
   async logout() {
@@ -155,13 +198,25 @@ export class Tab1Page implements OnInit {
   updateFoundDocument(val) {
     const type = 'found';
     if (val) {
-      this.lostServ.checkIfUserProfile(
+      this.deviceService.checkIfUserProfile(
         localStorage.getItem('userEmail'),
         type,
         this.selectedDoc
       );
     }
     return;
+  }
+
+  AddRemoveSaleDevice(document: any, isForSale: boolean) {
+    document.isForSale = isForSale;
+    document.saleStatus = '';
+    this.deviceService.removeDeviceFromSale(document).then((resp) => {
+      if (resp) {
+        this.ngOnInit();
+      } else {
+        console.log('sales couldnt be removed');
+      }
+    });
   }
 
   async viewPicture(document: any) {
