@@ -5,7 +5,8 @@ import { DeviceHttp } from '../http/device.http';
   providedIn: 'root',
 })
 export class DeviceService {
-  document: any = {};
+  device: any = {};
+  company: any = {};
   constructor(private deviceHttp: DeviceHttp) {}
 
   async checkIfUserProfile(email: any, type: string, selectedDoc: any) {
@@ -20,24 +21,56 @@ export class DeviceService {
     return this.deviceHttp.getUserDevices(email);
   }
 
-  removeDeviceFromSale(doc: any) {
-    return this.deviceHttp.removeDeviceFromSale(doc);
+  updateDeviceFromSale(doc: any) {
+    return this.deviceHttp.updateDeviceFromSale(doc);
+  }
+
+  getSalesChats(id: any) {
+    return this.deviceHttp.getSalesChats(id);
+  }
+
+  getSalesChatsOwner(id: any) {
+    return this.deviceHttp.getSalesChatsOwner(id);
+  }
+
+  saleChatExist(deviceId: any) {
+    return this.deviceHttp.saleChatExist(deviceId);
+  }
+
+  saveCompanyToStore(company: any) {
+    this.company = company;
+  }
+
+  getCompanyFromStore() {
+    return this.company;
+  }
+
+  getCompanies(): any {
+    return this.deviceHttp.getCompanies();
+  }
+
+  getUserDevicesForRecycle(email: string): any {
+    return this.deviceHttp.getUserDevicesForRecycle(email);
+  }
+
+  saveRecycleDevice(device: any, company: any) {
+    return this.deviceHttp.saveRecycleDevice(device, company);
   }
 
   saveFoundDoc(doc: any) {
     return this.deviceHttp.saveFoundDoc(doc);
   }
 
-  saveDocToStore(doc: any) {
-    this.document = doc;
+  saveDeviceToStore(doc: any) {
+    this.device = doc;
   }
 
   getDocFromStore() {
-    return this.document;
+    return this.device;
   }
 
-  getmatchedDocs(email: string) {
-    return this.deviceHttp.getmatchedDocs(email);
+  getmatchedSales(email: string) {
+    return this.deviceHttp.getmatchedSales(email);
   }
 
   deleteDoc(doc: any) {
@@ -60,12 +93,7 @@ export class DeviceService {
     return this.deviceHttp.getUserChats(id);
   }
 
-  sendMessage(message: {
-    from: string;
-    text: string;
-    created: Date;
-    chatId: any;
-  }) {
+  sendMessage(message: any) {
     return this.deviceHttp.sendMessage(message);
   }
 

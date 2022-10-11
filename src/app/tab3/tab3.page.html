@@ -1,7 +1,32 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title style="font-size: small"> Dispose device </ion-title>
+    <ion-title style="font-size: small"> Dispose device(s) </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true"> </ion-content>
+<ion-content [fullscreen]="true">
+  <ion-searchbar
+    placeholder="Filter"
+    showCancelButton="focus"
+    [(ngModel)]="term"
+    animated="true"
+  ></ion-searchbar>
+
+  <ion-list *ngFor="let company of companies | filter:term">
+    <ion-item>
+      <ion-thumbnail slot="start">
+        <img *ngIf="!company.imageUrl" src="../../assets/images/no_image.png" />
+        <!-- <img *ngIf="company.imageUrl" [src]="device.imageUrl" /> -->
+      </ion-thumbnail>
+      <div (click)="recycle(company)">
+        <h6 style="font-weight: 500">{{company.name}}</h6>
+        <ion-label style="text-align: left-justify">
+          <p>{{company.contactPerson}}</p>
+        </ion-label>
+        <ion-label style="text-align: left-justify">
+          <p>{{company.cellphone}}</p>
+        </ion-label>
+      </div>
+    </ion-item>
+  </ion-list>
+</ion-content>

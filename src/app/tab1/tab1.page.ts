@@ -36,7 +36,8 @@ export class Tab1Page implements OnInit {
     public alertController: AlertController,
     public loadingController: LoadingController,
     private authService: AuthenticationService,
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private toastController: ToastController
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -210,8 +211,14 @@ export class Tab1Page implements OnInit {
   AddRemoveSaleDevice(document: any, isForSale: boolean) {
     document.isForSale = isForSale;
     document.saleStatus = '';
-    this.deviceService.removeDeviceFromSale(document).then((resp) => {
+    this.deviceService.updateDeviceFromSale(document).then(async (resp) => {
       if (resp) {
+        const toast = await this.toastController.create({
+          message: 'updated successfully',
+          duration: 2000,
+        });
+        toast.present();
+
         this.ngOnInit();
       } else {
         console.log('sales couldnt be removed');

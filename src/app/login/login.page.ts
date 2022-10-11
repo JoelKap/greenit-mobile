@@ -17,7 +17,8 @@ export class LoginPage implements OnInit {
     private authService: AuthenticationService,
     private alertController: AlertController,
     private router: Router,
-    private loadingController: LoadingController) { }
+    private loadingController: LoadingController
+  ) {}
 
   ngOnInit() {
     this.credentials = this.fb.group({
@@ -32,8 +33,19 @@ export class LoginPage implements OnInit {
 
     this.authService.login(this.credentials.value).then(
       async (res) => {
-        await loading.dismiss();
-        this.router.navigateByUrl('/tabs', { replaceUrl: true });
+        if (res) {
+          await loading.dismiss();
+          this.router.navigateByUrl('/tabs', { replaceUrl: true });
+        } else {
+          await loading.dismiss();
+          const alert = await this.alertController.create({
+            header: 'Login failed',
+            message: res.error.error,
+            buttons: ['OK'],
+          });
+
+          await alert.present();
+        }
       },
       async (res) => {
         await loading.dismiss();

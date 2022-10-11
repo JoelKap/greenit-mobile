@@ -33,7 +33,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
     public modalController: ModalController,
     private fb: FormBuilder,
     public loadingController: LoadingController,
-    private lostDocService: DeviceService,
+    private deviceService: DeviceService,
     private toastController: ToastController,
     private router: Router
   ) {}
@@ -83,7 +83,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
       duration: 2000,
     });
     await loading.present();
-    const subs$ = this.lostDocService.getFoundBy(
+    const subs$ = this.deviceService.getFoundBy(
       localStorage.getItem('userEmail')
     );
     this.users$ = subs$.pipe(take(1)).subscribe((users) => {
@@ -122,7 +122,6 @@ export class AddDevicePage implements OnInit, OnDestroy {
       const photo = `data:image/jpeg;base64,${imageData}`;
       var uploadTask = this.storage.ref(`deviceFiles/${id}`);
       uploadTask.putString(photo, 'data_url');
-      //this.navCtrl.navigateForward([`/tabs/tab${1}`]);
       this.router.navigateByUrl('/tabs', { replaceUrl: true });
       this.modalController.dismiss({
         dismissed: true,
@@ -139,7 +138,6 @@ export class AddDevicePage implements OnInit, OnDestroy {
   }
 
   onIsForSaleChanged(event): void {
-    debugger;
     if (event.detail.value === 'Yes') {
       this.selectedIsForSale = true;
     } else {

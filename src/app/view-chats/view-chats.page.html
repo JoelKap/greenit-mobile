@@ -1,0 +1,61 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title style="font-size: small">Inbox</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-toolbar>
+    <ion-searchbar
+      placeholder="Filter"
+      showCancelButton="focus"
+      [(ngModel)]="term"
+      animated="true"
+    ></ion-searchbar>
+  </ion-toolbar>
+
+  <ion-card *ngFor="let device of saleDevices | filter:term">
+    <ion-item>
+      <ion-icon name="mail" slot="start"></ion-icon>
+      <ion-label style="font-size: 14px; text-align: center"
+        >{{device.documentType}}</ion-label
+      >
+      <ion-button
+        fill="outline"
+        *ngIf="device.isFoundUser"
+        (click)="openChat(device)"
+        slot="end"
+        >view chat</ion-button
+      >
+      <ion-button
+        fill="outline"
+        *ngIf="!device.isFoundUser"
+        (click)="openChat(device)"
+        slot="end"
+        >chat</ion-button
+      >
+      <ion-button
+        fill="outline"
+        *ngIf="!device.isFoundUser"
+        (click)="delete(device)"
+        slot="end"
+        >delete</ion-button
+      >
+    </ion-item>
+    <label
+      vertical="left"
+      *ngIf="device.isFoundUser"
+      style="padding-left: 87px; font-size: 12px"
+      >Lost by: {{device.lostBy}}</label
+    >
+    <label
+      vertical="left"
+      *ngIf="!device.isFoundUser"
+      style="padding-left: 87px; font-size: 12px"
+      >Found by: {{device.foundBy}}</label
+    >
+  </ion-card>
+</ion-content>

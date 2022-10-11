@@ -52,11 +52,14 @@ const routes: Routes = [
       import('./chat/chat.module').then((m) => m.ChatPageModule),
     canLoad: [AuthGuard],
   },
-  // {
-  //   path: 'login',
-  //   loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule),
-  //   canLoad: [AuthGuard]
-  // },
+  {
+    path: 'view-chats',
+    loadChildren: () =>
+      import('./view-chats/view-chats.module').then(
+        (m) => m.ViewChatsPageModule
+      ),
+    //canLoad: [AuthGuard],
+  },
   {
     path: 'view-picture',
     loadChildren: () =>
@@ -76,6 +79,10 @@ const routes: Routes = [
     path: '',
     redirectTo: '/login',
     pathMatch: 'full',
+  },
+  {
+    path: 'view-device-for-recycle',
+    loadChildren: () => import('./view-device-for-recycle/view-device-for-recycle.module').then( m => m.ViewDeviceForRecyclePageModule)
   },
 ];
 @NgModule({

@@ -38,7 +38,8 @@ export class Tab2Page implements OnInit {
     public alertController: AlertController,
     public loadingController: LoadingController,
     private authService: AuthenticationService,
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private toastController: ToastController
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -57,7 +58,12 @@ export class Tab2Page implements OnInit {
       this.devicesLodash.length = 0;
       arr = device;
       arr.forEach((device) => {
-        device.createdAt = device.createdAt.toDate().toDateString();
+        if (typeof device.createdAt === 'string') {
+          device.createdAt;
+        } else {
+          device.createdAt = new Date(device.createdAt.seconds * 1000);
+        }
+
         this.deviceService.getFoundBy(device.email).subscribe((user: any) => {
           this.seller = user[0].name + ' ' + user[0].lastname;
         });
@@ -148,10 +154,6 @@ export class Tab2Page implements OnInit {
                 handler: () => resolve(this.viewPicture(document)),
               },
               {
-                text: 'Contact saller',
-                handler: () => resolve(this.contactBuyer(document)),
-              },
-              {
                 text: 'Remove sale',
                 handler: () => resolve(this.AddRemoveSaleDevice(document)),
               },
@@ -187,7 +189,7 @@ export class Tab2Page implements OnInit {
                 handler: () => resolve(this.viewPicture(document)),
               },
               {
-                text: 'Contact saller',
+                text: 'Contact seller',
                 handler: () => resolve(this.contactBuyer(document)),
               },
             ],
@@ -200,7 +202,40 @@ export class Tab2Page implements OnInit {
   }
 
   contactBuyer(document: any) {
-    debugger;
+    this.firestore
+      .collection('users', (ref) =>
+        ref.where('email', '==', localStorage.getItem('userEmail')).limit(1)
+      )
+      .get()
+      .subscribe(async (user) => {
+        if (user.size > 0) {
+          this.deviceService.saveDeviceToStore(document);
+          this.router.navigateByUrl('/chat');
+        } else {
+          return new Promise((resolve, reject) => {
+            this.alertController
+              .create({
+                header: 'User Profile',
+                message:
+                  'It appears we needs more of your info, Please click ok to proceed',
+                buttons: [
+                  {
+                    text: 'OK',
+                    handler: () => resolve(this.navigateTo()),
+                  },
+                ],
+              })
+              .then((alert) => {
+                alert.present();
+              });
+          });
+        }
+      });
+  }
+
+  chat() {
+    this.navCtrl.navigateForward(['view-chats']);
+    //this.router.navigateByUrl('/view-chats');
   }
 
   async logout() {
@@ -223,8 +258,14 @@ export class Tab2Page implements OnInit {
   AddRemoveSaleDevice(document: any) {
     document.isForSale = false;
     document.saleStatus = '';
-    this.deviceService.removeDeviceFromSale(document).then((resp) => {
+    this.deviceService.updateDeviceFromSale(document).then(async (resp) => {
       if (resp) {
+        const toast = await this.toastController.create({
+          message: 'updated successfully',
+          duration: 2000,
+        });
+        toast.present();
+
         this.ngOnInit();
       } else {
         console.log('sales couldnt be removed');

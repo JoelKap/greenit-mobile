@@ -1,15 +1,13 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-title style="font-size: small"> Buy or Sale device </ion-title>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title style="font-size: small"> Pick a device to recycle </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-fab vertical="top" horizontal="end" edge slot="fixed">
-    <ion-fab-button (click)="chat()">
-      <ion-icon name="chatbox-ellipses-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
   <ion-searchbar
     placeholder="Filter"
     showCancelButton="focus"
@@ -20,7 +18,7 @@
   <ion-card color="light" *ngFor="let device of devices | filter:term">
     <div
       class="img-wrapper"
-      (click)="viewDevice(device)"
+      (click)="recycleDevice(device)"
       style="padding-top: 15px"
     >
       <img *ngIf="!device.imageUrl" src="../../assets/images/no_image.png" />
@@ -38,10 +36,7 @@
         </div>
       </ion-text>
       <label vertical="left" style="font-size: 12px"
-        >Posted By: {{seller}}</label
-      ><br />
-      <label *ngIf="device.createdAt" vertical="left" style="font-size: 12px"
-        >Posted On: {{device?.createdAt | date}}</label
+        >Date Purchased: {{device.datePurchased | date}}</label
       >
     </ion-card-content>
   </ion-card>

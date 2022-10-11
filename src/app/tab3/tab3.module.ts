@@ -18,6 +18,7 @@ import { Media } from '@ionic-native/media/ngx';
 import { StreamingMedia } from '@ionic-native/streaming-media/ngx';
 import { PhotoViewer } from '@ionic-native/photo-viewer/ngx';
 import { Camera } from '@ionic-native/camera/ngx';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   imports: [
@@ -28,8 +29,11 @@ import { Camera } from '@ionic-native/camera/ngx';
     RouterModule.forChild([{ path: '', component: Tab3Page }]),
     Tab3PageRoutingModule,
     HttpClientModule,
+    Ng2SearchPipeModule,
+    FormsModule,
+    ExploreContainerComponentModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireStorageModule
+    AngularFireStorageModule,
   ],
   providers: [
     ImagePicker,
@@ -38,8 +42,8 @@ import { Camera } from '@ionic-native/camera/ngx';
     Media,
     StreamingMedia,
     PhotoViewer,
-    InAppBrowser
+    InAppBrowser,
   ],
-  declarations: [Tab3Page]
+  declarations: [Tab3Page],
 })
 export class Tab3PageModule {}
