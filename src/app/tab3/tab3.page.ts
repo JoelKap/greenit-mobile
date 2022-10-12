@@ -4,7 +4,6 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { DeviceService } from '../service/device.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import * as _ from 'lodash';
-import { getDoc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-tab3',
