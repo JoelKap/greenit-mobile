@@ -51,7 +51,7 @@ export class ViewDeviceForRecyclePage implements OnInit {
       duration: 2000,
     });
     await loading.present();
-
+    debugger;
     const email = localStorage.getItem('userEmail');
     this.devices$ = this.deviceService.getUserDevicesForRecycle(email);
     this.devices$.forEach((device) => {

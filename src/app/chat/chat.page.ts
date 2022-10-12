@@ -17,7 +17,6 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
   styleUrls: ['./chat.page.scss'],
 })
 export class ChatPage implements OnInit {
-  //globalId = this.firestore.createId();
   buyer = '';
   users$: any;
   messages: any = [];

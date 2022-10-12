@@ -148,6 +148,22 @@ export class DeviceHttp {
       await this.firestore.doc(`recycles/${id}`).set({
         ...company,
         ...device,
+        createdAt: new Date(),
+      });
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async saveRepairDevice(device: any, company: any) {
+    try {
+      const id = this.firestore.createId();
+      await this.firestore.doc(`repairs/${id}`).set({
+        ...device,
+        ...company,
+        createdAt: new Date(),
       });
 
       return true;
@@ -182,6 +198,15 @@ export class DeviceHttp {
           .where('isForSale', '==', false)
       )
       .valueChanges();
+  }
+
+  async deleteDevice(doc: any) {
+    try {
+      await this.firestore.collection('devices').doc(doc.id).delete();
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   async saveFoundDoc(doc: any): Promise<any> {
@@ -257,6 +282,14 @@ export class DeviceHttp {
           .where('saleStatus', '==', 'IN PROGRESS')
       );
     });
+  }
+
+  getRepairedCompanies(): any {
+    return this.firestore
+      .collection<any>(`companiesRepairs`, (ref) => {
+        return ref.where('isDeleted', '==', false);
+      })
+      .valueChanges();
   }
 
   deleteDoc(selectedDoc: any): Promise<any> {

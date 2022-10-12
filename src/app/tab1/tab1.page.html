@@ -37,9 +37,14 @@
           <p>R {{device.price}}</p>
         </div>
       </ion-text>
-      <label vertical="left" style="font-size: 12px"
-        >Date Purchased: {{device.datePurchased | date}}</label
-      >
+      <div>
+        <label vertical="left" style="font-size: 12px">
+          {{device.description}}
+        </label>
+      </div>
+      <label vertical="left" style="font-size: 12px">
+        Date Purchased: {{device.datePurchased | date}}
+      </label>
     </ion-card-content>
   </ion-card>
 </ion-content>

@@ -125,9 +125,7 @@ export class Tab1Page implements OnInit {
         this.alertController
           .create({
             header: document.documentType,
-            message: `Condition: ${document.deviceCondition}
-              Emei: ${document.imei}
-              Date purchased: ${datePurchased}`,
+            message: `Emei number: ${document.imei}`,
             buttons: [
               {
                 text: 'Close',
@@ -140,6 +138,14 @@ export class Tab1Page implements OnInit {
                 role: 'Pictures',
                 cssClass: 'secondary',
                 handler: () => resolve(this.viewPicture(document)),
+              },
+              {
+                text: 'Edit',
+                handler: () => resolve(this.editDevice(document)),
+              },
+              {
+                text: 'Send for repair',
+                handler: () => resolve(this.repairDevice(document)),
               },
               {
                 text: 'Add sale',
@@ -161,9 +167,7 @@ export class Tab1Page implements OnInit {
         this.alertController
           .create({
             header: document.documentType,
-            message: `Condition: ${document.deviceCondition}
-              Emei: ${document.imei}
-              Date purchased: ${datePurchased}`,
+            message: `Emei number: ${document.imei}`,
             buttons: [
               {
                 text: 'Close',
@@ -176,6 +180,14 @@ export class Tab1Page implements OnInit {
                 role: 'Pictures',
                 cssClass: 'secondary',
                 handler: () => resolve(this.viewPicture(document)),
+              },
+              {
+                text: 'Edit',
+                handler: () => resolve(this.editDevice(document)),
+              },
+              {
+                text: 'Send for repair',
+                handler: () => resolve(this.repairDevice(document)),
               },
               {
                 text: 'Remove sale',
@@ -224,6 +236,41 @@ export class Tab1Page implements OnInit {
         console.log('sales couldnt be removed');
       }
     });
+  }
+
+  editDevice(document: any) {
+    if (document) {
+      this.deviceService.saveDeviceToStore(document);
+      this.navCtrl.navigateForward(['edit-device']);
+    }
+  }
+
+  repairDevice(document: any) {
+    if (document && !document.isForSale) {
+      this.deviceService.saveDeviceToStore(document);
+      this.navCtrl.navigateForward(['repair-device']);
+    } else {
+      return new Promise((resolve, reject) => {
+        this.alertController
+          .create({
+            header: 'Device for sale',
+            message: `Please note only device that is not under for sale, can be sent for repair`,
+            buttons: [
+              {
+                text: 'OK',
+                handler: () => resolve(this.navigateToTab()),
+              },
+            ],
+          })
+          .then((alert) => {
+            alert.present();
+          });
+      });
+    }
+  }
+
+  navigateToTab() {
+    return;
   }
 
   async viewPicture(document: any) {

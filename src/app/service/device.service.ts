@@ -57,6 +57,14 @@ export class DeviceService {
     return this.deviceHttp.saveRecycleDevice(device, company);
   }
 
+  deleteDevice(doc: any) {
+    return this.deviceHttp.deleteDevice(doc);
+  }
+
+  saveRepairDevice(device: any, company: any) {
+    return this.deviceHttp.saveRepairDevice(device, company);
+  }
+
   saveFoundDoc(doc: any) {
     return this.deviceHttp.saveFoundDoc(doc);
   }
@@ -91,6 +99,10 @@ export class DeviceService {
 
   getUserChats(id: any) {
     return this.deviceHttp.getUserChats(id);
+  }
+
+  getRepairedCompanies(): any {
+    return this.deviceHttp.getRepairedCompanies();
   }
 
   sendMessage(message: any) {

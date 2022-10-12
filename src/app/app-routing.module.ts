@@ -84,6 +84,14 @@ const routes: Routes = [
     path: 'view-device-for-recycle',
     loadChildren: () => import('./view-device-for-recycle/view-device-for-recycle.module').then( m => m.ViewDeviceForRecyclePageModule)
   },
+  {
+    path: 'edit-device',
+    loadChildren: () => import('./edit-device/edit-device.module').then( m => m.EditDevicePageModule)
+  },
+  {
+    path: 'repair-device',
+    loadChildren: () => import('./repair-device/repair-device.module').then( m => m.RepairDevicePageModule)
+  },
 ];
 @NgModule({
   imports: [

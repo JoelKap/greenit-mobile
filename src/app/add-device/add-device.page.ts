@@ -4,13 +4,15 @@ import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
+
 import {
+  AlertController,
   LoadingController,
   ModalController,
   NavController,
   ToastController,
 } from '@ionic/angular';
-import { take } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import { DeviceService } from '../service/device.service';
 
 @Component({
@@ -22,6 +24,8 @@ export class AddDevicePage implements OnInit, OnDestroy {
   users$: any;
   deviceForm: FormGroup;
   selectedDeviceBrand: any;
+  selectedDeviceStatus: any;
+  selectedDeviceWarranty: any;
   selectedDeviceCondition: any;
   selectedIsForSale: any;
 
@@ -29,6 +33,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
     public firestore: AngularFirestore,
     private camera: Camera,
     private navCtrl: NavController,
+    public alertController: AlertController,
     private storage: AngularFireStorage,
     public modalController: ModalController,
     private fb: FormBuilder,
@@ -42,6 +47,8 @@ export class AddDevicePage implements OnInit, OnDestroy {
     this.deviceForm = this.fb.group({
       deviceBrand: [''],
       deviceCondition: [''],
+      status: [''],
+      warranty: [''],
       owner: [''],
       datePurchased: [''],
       createdAt: [''],
@@ -64,11 +71,14 @@ export class AddDevicePage implements OnInit, OnDestroy {
   }
 
   async saveDevice() {
+    debugger;
     this.deviceForm.controls['deviceBrand'].setValue(this.selectedDeviceBrand);
     this.deviceForm.controls['deviceCondition'].setValue(
       this.selectedDeviceCondition
     );
     this.deviceForm.controls['createdAt'].setValue(new Date());
+    this.deviceForm.controls['status'].setValue(this.selectedDeviceStatus);
+    this.deviceForm.controls['warranty'].setValue(this.selectedDeviceWarranty);
     this.deviceForm.controls['isDeleted'].setValue(false);
     this.deviceForm.controls['isFound'].setValue(false);
     this.deviceForm.controls['isForSale'].setValue(this.selectedIsForSale);
@@ -91,20 +101,84 @@ export class AddDevicePage implements OnInit, OnDestroy {
       this.deviceForm.controls['owner'].setValue(
         users[0].name + ' ' + users[0].lastname
       );
-      this.firestore
-        .doc(`devices/${id}`)
-        .set({
-          id,
-          ...this.deviceForm.value,
+
+      var imei = this.deviceForm.controls.imei.value;
+      var exist = this.firestore
+        .collection<any>(`devices`, (ref) => {
+          return ref.where('imei', '==', imei).limit(1);
         })
-        .then((res) => {
-          loading.dismiss();
-          this.initializePreview(id);
-        });
+        .get()
+        .pipe(
+          map((item: any) => {
+            return item.docs.map((dataItem: any) => dataItem.data());
+          })
+        );
+
+      exist.toPromise().then((res: any) => {
+        if (res.length) {
+          if (res[0].status === 'LOST' || res[0].status === 'STOLEN') {
+            //Let user know taht device is already been registered on the platform and reported lost or stolen
+            return new Promise((resolve, reject) => {
+              this.alertController
+                .create({
+                  header: 'Lost/Stolen Device',
+                  message: `It appear that this device may be in pocession of the wrong person, please contact the owner of this device on ${res[0].email}`,
+                  buttons: [
+                    {
+                      text: 'OK',
+                      handler: () => resolve(this.navigateTo()),
+                    },
+                  ],
+                })
+                .then((alert) => {
+                  alert.present();
+                });
+            });
+          } else {
+            //HARD delete existing device details and register new user
+            this.deviceService.deleteDevice(res[0]).then((resp) => {
+              if (resp) {
+                this.firestore
+                  .doc(`devices/${id}`)
+                  .set({
+                    id,
+                    ...this.deviceForm.value,
+                  })
+                  .then(async (res) => {
+                    loading.dismiss();
+                    const toast = await this.toastController.create({
+                      message: 'Device added successfully!',
+                      duration: 2000,
+                    });
+                    toast.present();
+                    return this.navCtrl.navigateForward([`/tabs/tab${1}`]);
+                  });
+              } else {
+                alert('Oopsy! Please contact our system admin');
+              }
+            });
+          }
+        } else {
+          this.firestore
+            .doc(`devices/${id}`)
+            .set({
+              id,
+              ...this.deviceForm.value,
+            })
+            .then((res) => {
+              loading.dismiss();
+              this.initializePreview(id);
+            });
+        }
+      });
     });
   }
 
-  initializePreview(id) {
+  navigateTo() {
+    return;
+  }
+
+  async initializePreview(id: any) {
     const options: CameraOptions = {
       quality: 100,
       destinationType: this.camera.DestinationType.DATA_URL,
@@ -113,19 +187,18 @@ export class AddDevicePage implements OnInit, OnDestroy {
       mediaType: this.camera.MediaType.PICTURE,
       correctOrientation: true,
     };
-    return this.camera.getPicture(options).then(async (imageData) => {
-      const toast = await this.toastController.create({
-        message: 'Device saved successfully!',
-        duration: 2000,
-      });
-      toast.present();
-      const photo = `data:image/jpeg;base64,${imageData}`;
-      var uploadTask = this.storage.ref(`deviceFiles/${id}`);
-      uploadTask.putString(photo, 'data_url');
-      this.router.navigateByUrl('/tabs', { replaceUrl: true });
-      this.modalController.dismiss({
-        dismissed: true,
-      });
+    const imageData = await this.camera.getPicture(options);
+    const toast = await this.toastController.create({
+      message: 'Device saved successfully!',
+      duration: 2000,
+    });
+    toast.present();
+    const photo = `data:image/jpeg;base64,${imageData}`;
+    var uploadTask = this.storage.ref(`deviceFiles/${id}`);
+    uploadTask.putString(photo, 'data_url');
+    this.router.navigateByUrl('/tabs', { replaceUrl: true });
+    this.modalController.dismiss({
+      dismissed: true,
     });
   }
 
@@ -143,5 +216,13 @@ export class AddDevicePage implements OnInit, OnDestroy {
     } else {
       this.selectedIsForSale = false;
     }
+  }
+
+  onUnlinkDevice(event): void {
+    this.selectedDeviceStatus = event.detail.value;
+  }
+
+  onDeviceWarantee(event): void {
+    this.selectedDeviceWarranty = event.detail.value;
   }
 }

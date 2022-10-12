@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -11,10 +11,7 @@
   <form class="form" [formGroup]="deviceForm" (ngSubmit)="saveDevice()">
     <ion-item>
       <ion-label>Brand</ion-label>
-      <ion-select
-        placeholder="Select a brand"
-        (ionChange)="onBrandChanged($event)"
-      >
+      <ion-select placeholder="" (ionChange)="onBrandChanged($event)">
         <ion-select-option value="Sony">Sony</ion-select-option>
         <ion-select-option value="Samsung">Samsung</ion-select-option>
         <ion-select-option value="Iphone">Iphone</ion-select-option>
@@ -30,11 +27,23 @@
     </ion-item>
 
     <ion-item>
+      <ion-label>Warranty</ion-label>
+      <ion-select placeholder="" (ionChange)="onDeviceWarantee($event)">
+        <ion-select-option value="OUT OF WARANTY"
+          >Out of warranty</ion-select-option
+        >
+        <ion-select-option value="6 MONTHS">6 Months</ion-select-option>
+        <ion-select-option value="12 MONTHS">12 Months</ion-select-option>
+        <ion-select-option value="2 YEARS">2 Years</ion-select-option>
+        <ion-select-option value="3 YEARS">3 Years</ion-select-option>
+        <ion-select-option value="5 YEARS">5 Years</ion-select-option>
+        <ion-select-option value="5 YEARS PLUS">5 Years Plus</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
       <ion-label>Condition</ion-label>
-      <ion-select
-        placeholder="Select a condition"
-        (ionChange)="onConditionChanged($event)"
-      >
+      <ion-select placeholder="" (ionChange)="onConditionChanged($event)">
         <ion-select-option value="New">New</ion-select-option>
         <ion-select-option value="Used-New">Used - Like New</ion-select-option>
         <ion-select-option value="Used-Good">Used - Good</ion-select-option>
@@ -43,11 +52,20 @@
     </ion-item>
 
     <ion-item>
+      <ion-label>Unlink device</ion-label>
+      <ion-select placeholder="" (ionChange)="onUnlinkDevice($event)">
+        <ion-select-option value="STOLEN">Stolen</ion-select-option>
+        <ion-select-option value="LOST">Lost</ion-select-option>
+        <ion-select-option value="SOLD">Sold</ion-select-option>
+        <ion-select-option value="NO LONGER IN MY USE"
+          >No longer in my use</ion-select-option
+        >
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
       <ion-label>Is device for sale</ion-label>
-      <ion-select
-        placeholder="Is for sale"
-        (ionChange)="onIsForSaleChanged($event)"
-      >
+      <ion-select placeholder="" (ionChange)="onIsForSaleChanged($event)">
         <ion-select-option value="Yes">Yes</ion-select-option>
         <ion-select-option value="No">No</ion-select-option>
       </ion-select>
@@ -101,8 +119,8 @@
       <ion-input type="text"  formControlName="referenceNumber" class="form-controll"></ion-input>
     </ion-item> -->
 
-    <ion-button type="submit" expand="block" [disabled]="!deviceForm.valid"
-      >Submit and upload image</ion-button
-    >
+    <ion-button type="submit" expand="block" [disabled]="!deviceForm.valid">
+      Submit and take a picture
+    </ion-button>
   </form>
 </ion-content>
