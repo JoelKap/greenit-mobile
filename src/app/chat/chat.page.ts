@@ -8,7 +8,6 @@ import {
 } from '@ionic/angular';
 import { DeviceService } from '../service/device.service';
 import * as _ from 'lodash';
-import { take } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 
 @Component({

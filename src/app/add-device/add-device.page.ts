@@ -71,13 +71,12 @@ export class AddDevicePage implements OnInit, OnDestroy {
   }
 
   async saveDevice() {
-    debugger;
     this.deviceForm.controls['deviceBrand'].setValue(this.selectedDeviceBrand);
     this.deviceForm.controls['deviceCondition'].setValue(
       this.selectedDeviceCondition
     );
     this.deviceForm.controls['createdAt'].setValue(new Date());
-    this.deviceForm.controls['status'].setValue(this.selectedDeviceStatus);
+    this.deviceForm.controls['status'].setValue('');
     this.deviceForm.controls['warranty'].setValue(this.selectedDeviceWarranty);
     this.deviceForm.controls['isDeleted'].setValue(false);
     this.deviceForm.controls['isFound'].setValue(false);

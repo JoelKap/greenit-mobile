@@ -73,7 +73,7 @@ export class RepairDevicePage implements OnInit {
     });
   }
 
-  recycle(company: any) {
+  repair(company: any) {
     if (company) {
       this.device.isForSale = false;
       this.device.isFound = false;
@@ -93,7 +93,7 @@ export class RepairDevicePage implements OnInit {
                     duration: 2000,
                   });
                   toast.present();
-                  this.ngOnInit();
+                  return this.navCtrl.navigateForward([`/tabs/tab${1}`]);
                 } else {
                   alert(
                     'device couldnt be sent for repair, Please contact admin!'

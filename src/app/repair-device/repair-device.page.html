@@ -24,7 +24,7 @@
         <img *ngIf="!company.imageUrl" src="../../assets/images/no_image.png" />
         <!-- <img *ngIf="company.imageUrl" [src]="device.imageUrl" /> -->
       </ion-thumbnail>
-      <div (click)="recycle(company)">
+      <div (click)="repair(company)">
         <h6 style="font-weight: 500">{{company.name}}</h6>
         <ion-label style="text-align: left-justify">
           <p>{{company.contactPerson}}</p>

@@ -125,7 +125,7 @@ export class Tab1Page implements OnInit {
         this.alertController
           .create({
             header: document.documentType,
-            message: `Emei number: ${document.imei}`,
+            message: `EMEI: ${document.imei}`,
             buttons: [
               {
                 text: 'Close',
@@ -144,11 +144,14 @@ export class Tab1Page implements OnInit {
                 handler: () => resolve(this.editDevice(document)),
               },
               {
-                text: 'Send for repair',
+                text:
+                  document.saleStatus !== 'UNDER REPAIR'
+                    ? 'Send for repair'
+                    : 'device under repair',
                 handler: () => resolve(this.repairDevice(document)),
               },
               {
-                text: 'Add sale',
+                text: document.saleStatus !== 'UNDER REPAIR' ? 'Add sale' : '',
                 handler: () =>
                   resolve(this.AddRemoveSaleDevice(document, true)),
               },
@@ -167,7 +170,7 @@ export class Tab1Page implements OnInit {
         this.alertController
           .create({
             header: document.documentType,
-            message: `Emei number: ${document.imei}`,
+            message: `EMEI: ${document.imei}`,
             buttons: [
               {
                 text: 'Close',
@@ -186,11 +189,15 @@ export class Tab1Page implements OnInit {
                 handler: () => resolve(this.editDevice(document)),
               },
               {
-                text: 'Send for repair',
+                text:
+                  document.saleStatus !== 'UNDER REPAIR'
+                    ? 'Send for repair'
+                    : 'device under repair',
                 handler: () => resolve(this.repairDevice(document)),
               },
               {
-                text: 'Remove sale',
+                text:
+                  document.saleStatus !== 'UNDER REPAIR' ? 'Remove sale' : '',
                 handler: () =>
                   resolve(this.AddRemoveSaleDevice(document, false)),
               },

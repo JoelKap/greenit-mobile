@@ -1,9 +1,130 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>edit-device</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title style="font-size: small">Edit device</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
+  <form class="form" [formGroup]="deviceForm" (ngSubmit)="updateDevice()">
+    <ion-item>
+      <ion-label>Brand</ion-label>
+      <ion-select
+        placeholder=""
+        [(ngModel)]="brand"
+        [ngModelOptions]="{standalone: true}"
+        (ionChange)="onBrandChanged($event)"
+      >
+        <ion-select-option [value]="brand" *ngFor="let brand of brands">
+          {{brand}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
 
+    <ion-item>
+      <ion-label>Warranty</ion-label>
+      <ion-select
+        placeholder=""
+        [(ngModel)]="warranty"
+        [ngModelOptions]="{standalone: true}"
+        (ionChange)="onDeviceWarantee($event)"
+      >
+        <ion-select-option
+          [value]="warranty.value"
+          *ngFor="let warranty of warrantees"
+        >
+          {{warranty.text}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Condition</ion-label>
+      <ion-select
+        placeholder=""
+        [(ngModel)]="condition"
+        [ngModelOptions]="{standalone: true}"
+        (ionChange)="onConditionChanged($event)"
+      >
+        <ion-select-option
+          [value]="condition"
+          *ngFor="let condition of conditions"
+        >
+          {{condition}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Unlink device</ion-label>
+      <ion-select
+        placeholder=""
+        [(ngModel)]="unlinkdevice"
+        [ngModelOptions]="{standalone: true}"
+        (ionChange)="onUnlinkDevice($event)"
+      >
+        <ion-select-option
+          [value]="unlinkdevice.value"
+          *ngFor="let unlinkdevice of unlinkdevices"
+        >
+          {{unlinkdevice.text}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Model</ion-label>
+      <ion-input type="text" formControlName="deviceModel"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">IMEI</ion-label>
+      <ion-input
+        type="text"
+        formControlName="imei"
+        class="form-controll"
+        readonly="readonly"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Price</ion-label>
+      <ion-input type="number" formControlName="price"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Description</ion-label>
+      <ion-input
+        type="text"
+        formControlName="description"
+        class="form-controll"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Date Purchased</ion-label>
+      <ion-datetime
+        displayFormat="MM/DD/YYYY"
+        min="1994-03-14"
+        formControlName="datePurchased"
+        value="2002-09-23T15:03:46.789"
+      ></ion-datetime>
+    </ion-item>
+
+    <!-- <ion-item>
+      <ion-label position="floating">Description</ion-label>
+      <ion-input type="text" formControlName="address" class="form-controll"></ion-input>
+    </ion-item>
+
+    <ion-item *ngIf="selectedDocumentType === 'cert'">
+      <ion-label position="floating">Reference</ion-label>
+      <ion-input type="text"  formControlName="referenceNumber" class="form-controll"></ion-input>
+    </ion-item> -->
+
+    <ion-button type="submit" expand="block" [disabled]="!deviceForm.valid">
+      Update
+    </ion-button>
+  </form>
 </ion-content>
