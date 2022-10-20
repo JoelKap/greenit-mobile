@@ -10,8 +10,101 @@
 <ion-content class="ion-padding">
   <form class="form" [formGroup]="deviceForm" (ngSubmit)="saveDevice()">
     <ion-item>
-      <ion-label>Brand</ion-label>
-      <ion-select placeholder="" (ionChange)="onBrandChanged($event)">
+      <ion-label>Type</ion-label>
+      <ion-select placeholder="" (ionChange)="onTypeChanged($event)">
+        <ion-select-option value="Electrical">Electrical</ion-select-option>
+        <ion-select-option value="Electronic">Electronic</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="isElectrical">
+      <ion-label>Electrical Sub category</ion-label>
+      <ion-select
+        placeholder=""
+        (ionChange)="onElectricalSubCategoryChanged($event)"
+      >
+        <ion-select-option value="Heater">Heater</ion-select-option>
+        <ion-select-option value="Vacuum Cleaners"
+          >Vacuum Cleaners</ion-select-option
+        >
+        <ion-select-option value="Ceiling Fan">Ceiling Fan</ion-select-option>
+        <ion-select-option value="Table Fan">Table Fan</ion-select-option>
+        <ion-select-option value="Washing Machine"
+          >Washing Machine</ion-select-option
+        >
+        <ion-select-option value="Geyser">Geyser</ion-select-option>
+        <ion-select-option value="Microwave">Microwave</ion-select-option>
+        <ion-select-option value="Fridge">Fridge</ion-select-option>
+        <ion-select-option value="Blender">Blender</ion-select-option>
+        <ion-select-option value="Toaster">Toaster</ion-select-option>
+        <ion-select-option value="Pressure Cooker"
+          >Pressure Cooker</ion-select-option
+        >
+        <ion-select-option value="Air Fryer">Air Fryer</ion-select-option>
+        <ion-select-option value="Kettle">Kettle</ion-select-option>
+        <ion-select-option value="Stove">Stove</ion-select-option>
+        <ion-select-option value="Hob">Hob</ion-select-option>
+        <ion-select-option value="Other">Other</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="isElectrical === false">
+      <ion-label>Electronic Sub category</ion-label>
+      <ion-select
+        placeholder=""
+        (ionChange)="onElectronicSubCategoryChanged($event)"
+      >
+        <ion-select-option value="Mobile Phone">Mobile Phone</ion-select-option>
+        <ion-select-option value="Television">Television</ion-select-option>
+        <ion-select-option value="Computer-Desktop"
+          >Computer-Desktop</ion-select-option
+        >
+        <ion-select-option value="Home Theater (incl DVD Player / Radio)"
+          >Home Theater (incl DVD Player / Radio)</ion-select-option
+        >
+        <ion-select-option value="Other">Other</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="isElectricalSubCat">
+      <ion-label>Electrical Brand</ion-label>
+      <ion-select placeholder="" (ionChange)="onBrandElectricalChanged($event)">
+        <ion-select-option value="KIC">KIC</ion-select-option>
+        <ion-select-option value="Bennet Read">Bennet Read</ion-select-option>
+        <ion-select-option value="Logik">Logik</ion-select-option>
+        <ion-select-option value="Philips">Philips</ion-select-option>
+        <ion-select-option value="Defy">Defy</ion-select-option>
+        <ion-select-option value="Samsung">Samsung</ion-select-option>
+        <ion-select-option value="Hisense">Hisense</ion-select-option>
+        <ion-select-option value="Bosch">Bosch</ion-select-option>
+        <ion-select-option value="Miele">Miele</ion-select-option>
+        <ion-select-option value="Whirlpool">Whirlpool</ion-select-option>
+        <ion-select-option value="LG">LG</ion-select-option>
+        <ion-select-option value="DeLonghi">DeLonghi</ion-select-option>
+        <ion-select-option value="Jamie Oliver">Jamie Oliver</ion-select-option>
+        <ion-select-option value="Kenwood">Kenwood</ion-select-option>
+        <ion-select-option value="Mellerware">Mellerware</ion-select-option>
+        <ion-select-option value="Midea">Midea</ion-select-option>
+        <ion-select-option value="Morphy Richards"
+          >Morphy Richards</ion-select-option
+        >
+        <ion-select-option value="Russel Hobbs">Russel Hobbs</ion-select-option>
+        <ion-select-option value="Salton">Salton</ion-select-option>
+        <ion-select-option value="Smeg">Smeg</ion-select-option>
+        <ion-select-option value="Snappy Chef">Snappy Chef</ion-select-option>
+        <ion-select-option value="Sunbeam">Sunbeam</ion-select-option>
+        <ion-select-option value="Tefal">Tefal</ion-select-option>
+        <ion-select-option value="Tevo">Tevo</ion-select-option>
+        <ion-select-option value="Verimark">Verimark</ion-select-option>
+        <ion-select-option value="Sony">Sony</ion-select-option>
+        <ion-select-option value="Telefunken">Telefunken</ion-select-option>
+        <ion-select-option value="Other">Other</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="isElectrical === false">
+      <ion-label>Electronic Brand</ion-label>
+      <ion-select placeholder="" (ionChange)="onBrandElectronicChanged($event)">
         <ion-select-option value="Sony">Sony</ion-select-option>
         <ion-select-option value="Samsung">Samsung</ion-select-option>
         <ion-select-option value="Iphone">Iphone</ion-select-option>
@@ -51,18 +144,6 @@
       </ion-select>
     </ion-item>
 
-    <!-- <ion-item>
-      <ion-label>Unlink device</ion-label>
-      <ion-select placeholder="" (ionChange)="onUnlinkDevice($event)">
-        <ion-select-option value="STOLEN">Stolen</ion-select-option>
-        <ion-select-option value="LOST">Lost</ion-select-option>
-        <ion-select-option value="SOLD">Sold</ion-select-option>
-        <ion-select-option value="NO LONGER IN MY USE"
-          >No longer in my use</ion-select-option
-        >
-      </ion-select>
-    </ion-item> -->
-
     <ion-item>
       <ion-label>Is device for sale</ion-label>
       <ion-select placeholder="" (ionChange)="onIsForSaleChanged($event)">
@@ -76,11 +157,20 @@
       <ion-input type="text" formControlName="deviceModel"></ion-input>
     </ion-item>
 
-    <ion-item>
+    <ion-item *ngIf="isMobile">
       <ion-label position="floating">IMEI</ion-label>
       <ion-input
         type="text"
         formControlName="imei"
+        class="form-controll"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Serial</ion-label>
+      <ion-input
+        type="text"
+        formControlName="serial"
         class="form-controll"
       ></ion-input>
     </ion-item>

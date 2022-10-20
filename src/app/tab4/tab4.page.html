@@ -1,0 +1,14 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title style="font-size: small">Purchase History </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-searchbar
+    placeholder="Filter"
+    showCancelButton="focus"
+    [(ngModel)]="term"
+    animated="true"
+  ></ion-searchbar>
+</ion-content>

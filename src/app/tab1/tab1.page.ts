@@ -229,7 +229,7 @@ export class Tab1Page implements OnInit {
 
   AddRemoveSaleDevice(document: any, isForSale: boolean) {
     document.isForSale = isForSale;
-    document.saleStatus = '';
+    document.saleStatus = isForSale === true ? 'ON SALE' : '';
     this.deviceService.updateDeviceFromSale(document).then(async (resp) => {
       if (resp) {
         const toast = await this.toastController.create({
@@ -237,7 +237,6 @@ export class Tab1Page implements OnInit {
           duration: 2000,
         });
         toast.present();
-
         this.ngOnInit();
       } else {
         console.log('sales couldnt be removed');

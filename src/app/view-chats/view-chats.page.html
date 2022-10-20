@@ -39,23 +39,26 @@
       >
       <ion-button
         fill="outline"
-        *ngIf="!device.isFoundUser"
-        (click)="delete(device)"
+        *ngIf="device.isFoundUser"
+        (click)="sold(device)"
         slot="end"
-        >delete</ion-button
+        >sold</ion-button
+      >
+      <ion-button fill="outline" (click)="cancel(device)" slot="end"
+        >not interested</ion-button
       >
     </ion-item>
     <label
       vertical="left"
       *ngIf="device.isFoundUser"
       style="padding-left: 87px; font-size: 12px"
-      >Lost by: {{device.lostBy}}</label
+      >{{device.deviceBrand}} {{device.deviceModel}} : R {{device.price}}</label
     >
     <label
       vertical="left"
       *ngIf="!device.isFoundUser"
       style="padding-left: 87px; font-size: 12px"
-      >Found by: {{device.foundBy}}</label
+      >{{device.deviceBrand}} {{device.deviceModel}} : R {{device.price}}</label
     >
   </ion-card>
 </ion-content>

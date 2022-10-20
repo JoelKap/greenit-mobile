@@ -22,7 +22,12 @@ import { DeviceService } from '../service/device.service';
 })
 export class AddDevicePage implements OnInit, OnDestroy {
   users$: any;
+  isMobile: boolean;
+  isElectrical: boolean;
+  isElectricalSubCat: boolean;
   deviceForm: FormGroup;
+  selectedDeviceType: any;
+  selectedDeviceSubCat: any;
   selectedDeviceBrand: any;
   selectedDeviceStatus: any;
   selectedDeviceWarranty: any;
@@ -61,6 +66,9 @@ export class AddDevicePage implements OnInit, OnDestroy {
       isForSale: [Boolean],
       saleStatus: [''],
       email: [''],
+      deviceType: [''],
+      deviceSubCat: [''],
+      serial: [''],
     });
   }
 
@@ -71,9 +79,14 @@ export class AddDevicePage implements OnInit, OnDestroy {
   }
 
   async saveDevice() {
+    debugger;
     this.deviceForm.controls['deviceBrand'].setValue(this.selectedDeviceBrand);
     this.deviceForm.controls['deviceCondition'].setValue(
       this.selectedDeviceCondition
+    );
+    this.deviceForm.controls['deviceType'].setValue(this.selectedDeviceType);
+    this.deviceForm.controls['deviceSubCat'].setValue(
+      this.selectedDeviceSubCat
     );
     this.deviceForm.controls['createdAt'].setValue(new Date());
     this.deviceForm.controls['status'].setValue('');
@@ -81,7 +94,9 @@ export class AddDevicePage implements OnInit, OnDestroy {
     this.deviceForm.controls['isDeleted'].setValue(false);
     this.deviceForm.controls['isFound'].setValue(false);
     this.deviceForm.controls['isForSale'].setValue(this.selectedIsForSale);
-    this.deviceForm.controls['saleStatus'].setValue('');
+    this.deviceForm.controls['saleStatus'].setValue(
+      this.selectedIsForSale === true ? 'ON SALE' : ''
+    );
     this.deviceForm.controls['owner'].setValue('');
     this.deviceForm.controls['email'].setValue(
       localStorage.getItem('userEmail')
@@ -145,12 +160,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
                   })
                   .then(async (res) => {
                     loading.dismiss();
-                    const toast = await this.toastController.create({
-                      message: 'Device added successfully!',
-                      duration: 2000,
-                    });
-                    toast.present();
-                    return this.navCtrl.navigateForward([`/tabs/tab${1}`]);
+                    this.initializePreview(id);
                   });
               } else {
                 alert('Oopsy! Please contact our system admin');
@@ -195,13 +205,36 @@ export class AddDevicePage implements OnInit, OnDestroy {
     const photo = `data:image/jpeg;base64,${imageData}`;
     var uploadTask = this.storage.ref(`deviceFiles/${id}`);
     uploadTask.putString(photo, 'data_url');
-    this.router.navigateByUrl('/tabs', { replaceUrl: true });
-    this.modalController.dismiss({
-      dismissed: true,
-    });
+    return this.navCtrl.navigateForward([`/tabs/tab${1}`]);
   }
 
-  onBrandChanged(event): void {
+  onTypeChanged(event): void {
+    if (event.detail.value === 'Electrical') {
+      this.isElectrical = true;
+    } else {
+      this.isElectrical = false;
+    }
+    this.selectedDeviceType = event.detail.value;
+  }
+
+  onElectricalSubCategoryChanged(event): void {
+    this.isElectricalSubCat = true;
+    this.selectedDeviceSubCat = event.detail.value;
+  }
+
+  onElectronicSubCategoryChanged(event): void {
+    this.isElectricalSubCat = false;
+    if (event.detail.value === 'Mobile Phone') {
+      this.isMobile = true;
+    }
+    this.selectedDeviceSubCat = event.detail.value;
+  }
+
+  onBrandElectricalChanged(event): void {
+    this.selectedDeviceBrand = event.detail.value;
+  }
+
+  onBrandElectronicChanged(event): void {
     this.selectedDeviceBrand = event.detail.value;
   }
 

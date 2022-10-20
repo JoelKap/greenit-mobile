@@ -1,8 +1,6 @@
 import { AuthGuard } from './guards/auth.guard';
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
-import { IntroGuard } from './guards/intro.guard';
-import { AutoLoginGuard } from './guards/auto-login.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'intro', pathMatch: 'full' },
@@ -15,7 +13,6 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () =>
       import('./login/login.module').then((m) => m.LoginPageModule),
-    // canLoad: [IntroGuard]
   },
   {
     path: 'tabs',
@@ -58,7 +55,6 @@ const routes: Routes = [
       import('./view-chats/view-chats.module').then(
         (m) => m.ViewChatsPageModule
       ),
-    //canLoad: [AuthGuard],
   },
   {
     path: 'view-picture',
@@ -82,15 +78,24 @@ const routes: Routes = [
   },
   {
     path: 'view-device-for-recycle',
-    loadChildren: () => import('./view-device-for-recycle/view-device-for-recycle.module').then( m => m.ViewDeviceForRecyclePageModule)
+    loadChildren: () =>
+      import('./view-device-for-recycle/view-device-for-recycle.module').then(
+        (m) => m.ViewDeviceForRecyclePageModule
+      ),
   },
   {
     path: 'edit-device',
-    loadChildren: () => import('./edit-device/edit-device.module').then( m => m.EditDevicePageModule)
+    loadChildren: () =>
+      import('./edit-device/edit-device.module').then(
+        (m) => m.EditDevicePageModule
+      ),
   },
   {
     path: 'repair-device',
-    loadChildren: () => import('./repair-device/repair-device.module').then( m => m.RepairDevicePageModule)
+    loadChildren: () =>
+      import('./repair-device/repair-device.module').then(
+        (m) => m.RepairDevicePageModule
+      ),
   },
 ];
 @NgModule({

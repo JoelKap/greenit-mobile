@@ -78,7 +78,10 @@ export class DeviceHttp {
   getUserDevices(email: string): Observable<any[]> {
     return this.firestore
       .collection<any>(`devices`, (ref) =>
-        ref.where('email', '==', email).where('isDeleted', '==', false)
+        ref
+          .where('email', '==', email)
+          .where('isDeleted', '==', false)
+          .where('saleStatus', 'in', ['ON SALE', ''])
       )
       .valueChanges();
   }
@@ -88,7 +91,7 @@ export class DeviceHttp {
       .collection<any>(`devices`, (ref) =>
         ref
           .where('isForSale', '==', true)
-          .where('saleStatus', '!=', 'SOLD')
+          .where('saleStatus', '==', 'ON SALE')
           .where('isDeleted', '==', false)
       )
       .valueChanges();
@@ -97,18 +100,6 @@ export class DeviceHttp {
   async updateDeviceFromSale(doc: any): Promise<any> {
     try {
       await this.firestore.collection('devices').doc(doc.id).update(doc);
-      if (doc.isUpdate) {
-        this.getSalesChats(doc.id).subscribe((resp) => {
-          if (!resp.length) {
-            this.saveDeviceForSale(doc);
-          }
-        });
-      } else if (!doc.isUpdate) {
-        //this.saveDeviceForSale(doc);
-      } else {
-        this.saveDeviceForSale(doc);
-      }
-
       return true;
     } catch {
       return false;
@@ -234,6 +225,19 @@ export class DeviceHttp {
     );
   }
 
+  async saveSoldDevice(device: any) {
+    try {
+      const id = this.firestore.createId();
+      await this.firestore.doc(`soldDevices/${id}`).set({
+        id: id,
+        ...device,
+      });
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
   initializePreview(id) {
     const options: CameraOptions = {
       quality: 100,
@@ -271,16 +275,30 @@ export class DeviceHttp {
       });
   }
 
+  searchDeviceHistory(str: string) {
+    return this.firestore
+      .collection<any>(`devices`, (ref) => {
+        return ref.where('imei', '==', str).where('isDeleted', '==', false);
+      })
+      .valueChanges();
+  }
+
+  searchDeviceSerial(value: any) {
+    return this.firestore
+      .collection<any>(`devices`, (ref) => {
+        return ref.where('serial', '==', value).where('isDeleted', '==', false);
+      })
+      .valueChanges();
+  }
+
   getmatchedSales(email: string) {
-    return this.firestore.collection<any>(`devices`, (ref) => {
-      return (
-        ref
-          //.where('email', '==', email)
-          .where('isDeleted', '==', false)
-          .where('isFound', '==', true)
-          .where('isForSale', '==', true)
-          .where('saleStatus', '==', 'IN PROGRESS')
-      );
+    return this.firestore.collection<any>(`saleChats`, (ref) => {
+      return ref
+        .where('email', '==', email)
+        .where('isDeleted', '==', false)
+        .where('isFound', '==', true)
+        .where('isForSale', '==', true)
+        .where('saleStatus', '==', 'IN PROGRESS');
     });
   }
 
@@ -312,6 +330,39 @@ export class DeviceHttp {
       .valueChanges();
   }
 
+  async deleteChatSale(device: any) {
+    try {
+      var devices = this.firestore.collection('saleChats', (ref) =>
+        ref.where('deviceId', '==', device.id)
+      );
+
+      devices
+        .get()
+        .toPromise()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            doc.ref.delete();
+          });
+        });
+
+      var chats = this.firestore.collection('chats', (ref) =>
+        ref.where('chatId', '==', device.id)
+      );
+
+      chats
+        .get()
+        .toPromise()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            doc.ref.delete();
+          });
+        });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   saveMatchDoc(selectedDoc: any) {
     const id = this.firestore.createId();
     this.getFoundBy(localStorage.getItem('userEmail')).subscribe(
@@ -334,28 +385,43 @@ export class DeviceHttp {
   getUserChats(id: any) {
     //Modified chatId to uniqId
     return this.firestore
-      .collection<any>(`chats`, (ref) => ref.where('uniqId', '==', id))
+      .collection<any>(`chats`, (ref) => ref.where('chatId', '==', id))
       .valueChanges();
   }
 
-  sendMessage(message: any): Promise<any> {
+  async sendMessage(message: any): Promise<any> {
     const id = this.firestore.createId();
-    return this.firestore.doc(`chats/${id}`).set({
-      ...message,
-    });
+    try {
+      await this.firestore.doc(`chats/${id}`).set({
+        ...message,
+      });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async saveMatchSale(device: any) {
+    const id = this.firestore.createId();
+    try {
+      await this.firestore.doc(`saleChats/${id}`).set({
+        ...device,
+      });
+      return true;
+    } catch {
+      return false;
+    }
   }
 
   getChatlostDocs(email: string): Observable<any[]> {
     return this.firestore
-      .collection<any>(`lostDocuments`, (ref) =>
-        ref.where('email', '==', email)
-      )
+      .collection<any>(`devices`, (ref) => ref.where('email', '==', email))
       .valueChanges();
   }
 
-  getFoundDocuments(lostId: any) {
-    return this.firestore.collection<any>(`foundDocuments`, (ref) => {
-      return ref.where('lostId', '==', lostId).where('isDeleted', '==', false);
+  getFoundDocuments(id: any) {
+    return this.firestore.collection<any>(`saleChats`, (ref) => {
+      return ref.where('deviceId', '==', id).where('isDeleted', '==', false);
     });
   }
 }

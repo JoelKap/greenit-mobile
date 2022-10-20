@@ -10,12 +10,77 @@
 <ion-content class="ion-padding">
   <form class="form" [formGroup]="deviceForm" (ngSubmit)="updateDevice()">
     <ion-item>
-      <ion-label>Brand</ion-label>
+      <ion-label>Type</ion-label>
+      <ion-select
+        placeholder=""
+        [(ngModel)]="type"
+        [ngModelOptions]="{standalone: true}"
+        (ionChange)="onTypeChanged($event)"
+      >
+        <ion-select-option [value]="type" *ngFor="let type of types">
+          {{type}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="isElectrical">
+      <ion-label>Electrical Sub category</ion-label>
+      <ion-select
+        placeholder=""
+        [(ngModel)]="electricalSub"
+        [ngModelOptions]="{standalone: true}"
+        (ionChange)="onElectricalSubCategoryChanged($event)"
+      >
+        <ion-select-option
+          [value]="electricalSub"
+          *ngFor="let electricalSub of electricalSubs"
+        >
+          {{electricalSub}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="isElectrical === false">
+      <ion-label>Electronic Sub category</ion-label>
+      <ion-select
+        placeholder=""
+        [(ngModel)]="electronicSub"
+        [ngModelOptions]="{standalone: true}"
+        (ionChange)="onElectronicSubCategoryChanged($event)"
+      >
+        <ion-select-option
+          [value]="electronicSub"
+          *ngFor="let electricalSub of electronicSubs"
+        >
+          {{electronicSub}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="isElectrical">
+      <ion-label>Electrical Brand</ion-label>
+      <ion-select
+        placeholder=""
+        [(ngModel)]="elecBrand"
+        [ngModelOptions]="{standalone: true}"
+        (ionChange)="onBrandElectricalChanged($event)"
+      >
+        <ion-select-option
+          [value]="elecBrand"
+          *ngFor="let elecBrand of electricalBrands"
+        >
+          {{elecBrand}}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item *ngIf="isElectrical === false">
+      <ion-label>Electronic Brand</ion-label>
       <ion-select
         placeholder=""
         [(ngModel)]="brand"
         [ngModelOptions]="{standalone: true}"
-        (ionChange)="onBrandChanged($event)"
+        (ionChange)="onBrandElectronicChanged($event)"
       >
         <ion-select-option [value]="brand" *ngFor="let brand of brands">
           {{brand}}
@@ -79,13 +144,22 @@
       <ion-input type="text" formControlName="deviceModel"></ion-input>
     </ion-item>
 
-    <ion-item>
+    <ion-item *ngIf="isMobile === true">
       <ion-label position="floating">IMEI</ion-label>
       <ion-input
         type="text"
         formControlName="imei"
         class="form-controll"
         readonly="readonly"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Serial</ion-label>
+      <ion-input
+        type="text"
+        formControlName="serial"
+        class="form-controll"
       ></ion-input>
     </ion-item>
 
@@ -113,6 +187,10 @@
       ></ion-datetime>
     </ion-item>
 
+    <!-- <ion-item hidden>
+      <ion-radio formControlName="isUpdate"></ion-radio>
+    </ion-item> -->
+
     <!-- <ion-item>
       <ion-label position="floating">Description</ion-label>
       <ion-input type="text" formControlName="address" class="form-controll"></ion-input>
@@ -123,8 +201,6 @@
       <ion-input type="text"  formControlName="referenceNumber" class="form-controll"></ion-input>
     </ion-item> -->
 
-    <ion-button type="submit" expand="block" [disabled]="!deviceForm.valid">
-      Update
-    </ion-button>
+    <ion-button type="submit" expand="block"> Update </ion-button>
   </form>
 </ion-content>

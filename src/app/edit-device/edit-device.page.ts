@@ -23,16 +23,86 @@ import { DeviceService } from '../service/device.service';
 export class EditDevicePage implements OnInit {
   users$: any;
   deviceForm: FormGroup;
+  isMobile: boolean = false;
+  isElectrical: boolean;
+  isElectricalSubCat: boolean;
   selectedDeviceBrand: any;
   selectedDeviceStatus: any;
   selectedDeviceWarranty: any;
   selectedDeviceCondition: any;
+  selectedDeviceType: any;
+  selectedDeviceSubCat: any;
   selectedIsForSale: any;
+  electricalSub: any;
+  electronicSub: any;
+  elecBrand: any;
   device: any;
   brand: any;
+  type: any;
   warranty: any;
   condition: any;
   unlinkdevice: any;
+
+  types = ['Electrical', 'Electronic'];
+
+  electricalBrands = [
+    'KIC',
+    'Bennet Read',
+    'Logik',
+    'Philips',
+    'Defy',
+    'Samsung',
+    'Hisense',
+    'Bosch',
+    'Miele',
+    'Whirlpool',
+    'LG',
+    'DeLonghi',
+    'Jamie Oliver',
+    'Kenwood',
+    'Mellerware',
+    'Midea',
+    'Morphy Richards',
+    'Russel Hobbs',
+    'Salton',
+    'Smeg',
+    'Snappy Chef',
+    'Sunbeam',
+    'Tefal',
+    'Tevo',
+    'Verimark',
+    'Sony',
+    'Telefunken',
+    'Other',
+  ];
+
+  electricalSubs = [
+    'Heater',
+    'Vacuum Cleaners',
+    'Ceiling Fan',
+    'Table Fan',
+    'Washing Machine',
+    'Geyser',
+    'Microwave',
+    'Fridge',
+    'Blender',
+    'Toaster',
+    'Pressure Cooker',
+    'Air Fryer',
+    'Kettle',
+    'Stove',
+    'Hob',
+    'Hob',
+  ];
+
+  electronicSubs = [
+    'Mobile Phone',
+    'Television',
+    'Computer-Desktop',
+    'Home Theater (incl DVD Player / Radio)',
+    'Other',
+  ];
+
   brands = [
     'Sony',
     'Samsung',
@@ -81,7 +151,7 @@ export class EditDevicePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.device = this.deviceService.getDocFromStore();
+    this.device = this.deviceService.getDeviceFromStore();
     if (_.isEmpty(this.device))
       return this.navCtrl.navigateForward([`/tabs/tab${1}`]);
 
@@ -104,6 +174,12 @@ export class EditDevicePage implements OnInit {
       isForSale: [Boolean],
       saleStatus: [''],
       email: [''],
+      imageUrl: [''],
+      buyer: [''],
+      deviceId: [''],
+      deviceType: [''],
+      deviceSubCat: [''],
+      serial: [''],
     });
 
     this.brand = this.device.deviceBrand;
@@ -118,17 +194,61 @@ export class EditDevicePage implements OnInit {
     this.unlinkdevice = this.device.status;
     this.selectedDeviceStatus = this.unlinkdevice;
 
+    this.device.isUpdate = false;
+    if (this.device.imageUrl === undefined) {
+      this.device.imageUrl = '';
+    }
+
+    if (this.device.buyer === undefined) {
+      this.device.buyer = '';
+    }
+
+    if (this.device.deviceId === undefined) {
+      this.device.deviceId = '';
+    }
+
+    this.type = this.device.deviceType;
+    this.selectedDeviceType = this.type;
+
+    this.electricalSub = this.device.deviceSubCat;
+
+    this.electronicSub = this.device.deviceSubCat;
+
+    this.selectedDeviceSubCat =
+      this.electricalSub !== undefined
+        ? this.electricalSub
+        : this.electronicSub;
+
+    this.elecBrand = this.device.deviceBrand;
+    if (this.type === 'Electrical') {
+      this.isElectrical = true;
+    } else {
+      this.isElectrical = false;
+    }
+
+    if (this.device.deviceSubCat === 'Mobile Phone') {
+      this.isMobile = true;
+    }
+
+    if (!this.device.serial) {
+      this.deviceForm.controls['serial'].setValue('');
+      this.device.serial = '';
+    }
+
     this.deviceForm.setValue(this.device);
   }
 
   async updateDevice() {
-    debugger;
     this.deviceForm.controls['deviceBrand'].setValue(this.selectedDeviceBrand);
     this.deviceForm.controls['deviceCondition'].setValue(
       this.selectedDeviceCondition
     );
     this.deviceForm.controls['createdAt'].setValue(
       this.deviceForm.controls.createdAt.value
+    );
+    this.deviceForm.controls['deviceType'].setValue(this.selectedDeviceType);
+    this.deviceForm.controls['deviceSubCat'].setValue(
+      this.selectedDeviceSubCat
     );
     this.deviceForm.controls['status'].setValue(this.selectedDeviceStatus);
     this.deviceForm.controls['warranty'].setValue(this.selectedDeviceWarranty);
@@ -155,7 +275,10 @@ export class EditDevicePage implements OnInit {
     });
     await loading.present();
     const id = this.deviceForm.controls['id'].value;
-
+    if (this.deviceForm.controls.saleStatus.value === 'SOLD') {
+      this.deviceForm.controls.saleStatus.value === 'SOLD';
+      this.deviceForm.controls.isFound.setValue(true);
+    }
     return this.firestore
       .collection('devices')
       .doc(id)
@@ -167,6 +290,25 @@ export class EditDevicePage implements OnInit {
           duration: 2000,
         });
         toast.present();
+        debugger;
+        if (this.deviceForm.controls.saleStatus.value === 'SOLD') {
+          this.deviceForm.controls.isFound.setValue(true);
+          this.deviceService
+            .saveSoldDevice(this.deviceForm.value)
+            .then(async (resp) => {
+              if (resp) {
+                const toast = await this.toastController.create({
+                  message: 'thank you for using our service',
+                  duration: 2000,
+                });
+                toast.present();
+                this.navCtrl.navigateForward([`/tabs/tab${2}`]);
+              } else {
+                alert('something went wrong, please contact admin!');
+                console.log('something went wrong, please contact admin!');
+              }
+            });
+        }
         return this.navCtrl.navigateForward([`/tabs/tab${1}`]);
       })
       .catch(async () => {
@@ -212,8 +354,38 @@ export class EditDevicePage implements OnInit {
     this.selectedDeviceBrand = event.detail.value;
   }
 
+  onElectricalSubCategoryChanged(event): void {
+    this.isElectricalSubCat = true;
+    this.selectedDeviceSubCat = event.detail.value;
+  }
+
+  onElectronicSubCategoryChanged(event): void {
+    this.isElectricalSubCat = false;
+    if (event.detail.value === 'Mobile Phone') {
+      this.isMobile = true;
+    }
+    this.selectedDeviceSubCat = event.detail.value;
+  }
+
+  onBrandElectricalChanged(event): void {
+    this.selectedDeviceBrand = event.detail.value;
+  }
+
+  onBrandElectronicChanged(event): void {
+    this.selectedDeviceBrand = event.detail.value;
+  }
+
   onConditionChanged(event): void {
     this.selectedDeviceCondition = event.detail.value;
+  }
+
+  onTypeChanged(event): void {
+    if (event.detail.value === 'Electrical') {
+      this.isElectrical = true;
+    } else {
+      this.isElectrical = false;
+    }
+    this.selectedDeviceType = event.detail.value;
   }
 
   onIsForSaleChanged(event): void {
@@ -226,6 +398,9 @@ export class EditDevicePage implements OnInit {
 
   onUnlinkDevice(event): void {
     this.selectedDeviceStatus = event.detail.value;
+    if (this.selectedDeviceStatus === 'SOLD') {
+      this.deviceForm.controls.saleStatus.setValue('SOLD');
+    }
   }
 
   onDeviceWarantee(event): void {

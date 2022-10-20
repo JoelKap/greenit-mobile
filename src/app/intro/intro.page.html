@@ -1,56 +1,53 @@
-<ion-content>
-  <ion-fab vertical="top" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="start()">
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title style="font-size: small">Seach device history </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="login()">
       <ion-icon name="lock-closed-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-  <ion-slides pager="true">
-    <!-- Slide 1 -->
-    <ion-slide>
-      <ion-text color="light">
-        <img src="../../assets/images/first.jpg" />
-        <h1>Easy To Use!</h1>
-        <p style="font-size: small; text-align: center">
-          Intuitive Design meets industry know-how and usability
-        </p>
-        <ion-button (click)="next()" fill="outline" color="light"
-          >Next</ion-button
-        >
-      </ion-text>
-    </ion-slide>
 
-    <!-- Slide 2 -->
-    <ion-slide>
-      <ion-text color="light">
-        <img src="../../assets/images/second.jpg" />
-        <h1>Smart Technology</h1>
-        <p style="font-size: small; text-align: center">
-          Image Recognition, Smart Matching and Chatbots
+  <form class="form" [formGroup]="deviceHistoryForm">
+    <ion-item>
+      <ion-input
+        type="text"
+        formControlName="search"
+        placeholder="search using serial/imei #"
+      ></ion-input>
+      <ion-button
+        type="submit"
+        shape="round"
+        (click)="search()"
+        clear
+        item-right
+        >Search</ion-button
+      >
+    </ion-item>
+  </form>
+  <br /><br /><br />
+  <div class="articlez" *ngIf="articles && articles.length">
+    <!-- List of Popular News  -->
+    <ion-list no-lines *ngFor="let article of articles">
+      <ion-item>
+        <!-- Feature Image -->
+        <ion-thumbnail class="picturez" item-start>
+          <img src="../../assets/images/3.jpg" />
+        </ion-thumbnail>
+        <!-- Article Title -->
+        <h2 text-wrap style="padding-left: 20px; font-size: 20px">
+          {{article.title | slice:0:40}}
+          <span *ngIf="article.title.length > 40">...</span>
+        </h2>
+        <!-- Created Date -->
+        <p>
+          <ion-icon name="timer" style="color: #d32f2f"></ion-icon>
+          <span> &nbsp; {{ article.timestamp | date}}</span>
         </p>
-        <ion-button (click)="previous()" fill="outline" color="light"
-          >Previous</ion-button
-        >
-        <ion-button (click)="next()" fill="outline" color="light"
-          >next</ion-button
-        >
-      </ion-text>
-    </ion-slide>
-
-    <ion-slide>
-      <ion-text color="light">
-        <img src="../../assets/images/three.jpg" />
-        <h1>Handling Gateway</h1>
-        <p style="font-size: small; text-align: center">
-          Get ready for smoothest customer journey and least hassle for your
-          staff!
-        </p>
-        <ion-button (click)="previous()" fill="outline" color="light"
-          >Previous</ion-button
-        >
-        <ion-button (click)="next()" fill="outline" color="light"
-          >next</ion-button
-        >
-      </ion-text>
-    </ion-slide>
-  </ion-slides>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

@@ -37,12 +37,17 @@
           <p>R {{device.price}}</p>
         </div>
       </ion-text>
+      <div>
+        <label vertical="left" style="font-size: 12px">
+          {{device.description}}
+        </label>
+      </div>
       <label vertical="left" style="font-size: 12px"
         >Posted By: {{seller}}</label
       ><br />
       <label *ngIf="device.createdAt" vertical="left" style="font-size: 12px"
-        >Posted On: {{device?.createdAt | date}}</label
-      >
+        >Posted On: {{device?.createdAt | date}}
+      </label>
     </ion-card-content>
   </ion-card>
 </ion-content>

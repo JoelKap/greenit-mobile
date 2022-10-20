@@ -137,9 +137,7 @@ export class Tab2Page implements OnInit {
         this.alertController
           .create({
             header: document.documentType,
-            message: `Condition: ${document.deviceCondition}
-            Emei: ${document.imei}
-            Date purchased: ${datePurchased}`,
+            message: `EMEI: ${document.imei}`,
             buttons: [
               {
                 text: 'Close',
@@ -172,9 +170,7 @@ export class Tab2Page implements OnInit {
         this.alertController
           .create({
             header: document.documentType,
-            message: `Condition: ${document.deviceCondition}
-            Emei: ${document.imei}
-            Date purchased: ${datePurchased}`,
+            message: `EMEI: ${document.imei}`,
             buttons: [
               {
                 text: 'Close',
@@ -201,7 +197,7 @@ export class Tab2Page implements OnInit {
     }
   }
 
-  contactBuyer(document: any) {
+  contactBuyer(device: any) {
     this.firestore
       .collection('users', (ref) =>
         ref.where('email', '==', localStorage.getItem('userEmail')).limit(1)
@@ -209,7 +205,8 @@ export class Tab2Page implements OnInit {
       .get()
       .subscribe(async (user) => {
         if (user.size > 0) {
-          this.deviceService.saveDeviceToStore(document);
+          this.saveMatchSale(device);
+          //this.deviceService.saveDeviceToStore(document);
           this.router.navigateByUrl('/chat');
         } else {
           return new Promise((resolve, reject) => {
@@ -235,12 +232,47 @@ export class Tab2Page implements OnInit {
 
   chat() {
     this.navCtrl.navigateForward(['view-chats']);
-    //this.router.navigateByUrl('/view-chats');
   }
 
   async logout() {
     await this.authService.logout();
     this.router.navigateByUrl('/', { replaceUrl: true });
+  }
+
+  private saveMatchSale(device: any) {
+    device.saleStatus = 'IN PROGRESS';
+    device.isFound = true;
+    this.deviceService.updateDeviceFromSale(device).then(async (resp) => {
+      if (resp) {
+        this.deviceService
+          .getFoundBy(localStorage.getItem('userEmail'))
+          .subscribe((users) => {
+            if (users.length) {
+              device.buyer = users[0].name + ' ' + users[0].lastname;
+              device.isForSale = true;
+              device.saleStatus = 'IN PROGRESS';
+              device.isFound = true;
+              device.email = localStorage.getItem('userEmail');
+              device.deviceId = device.id;
+              device.createdAt = new Date();
+              this.deviceService.saveMatchSale(device).then(async (resp) => {
+                if (resp) {
+                  this.navCtrl.navigateForward(['view-chats']);
+                  console.log('message sent successfully');
+                } else {
+                  console.log(
+                    'Oopsy!, something went wrong, please contact admin'
+                  );
+                  alert('Oopsy!, something went wrong, please contact admin');
+                }
+              });
+            }
+          });
+      } else {
+        alert('something went wrong, please contact admin!');
+        console.log('something went wrong, please contact admin!');
+      }
+    });
   }
 
   updateFoundDocument(val) {
@@ -265,12 +297,26 @@ export class Tab2Page implements OnInit {
           duration: 2000,
         });
         toast.present();
-
         this.ngOnInit();
       } else {
         console.log('sales couldnt be removed');
       }
     });
+    // document.isForSale = false;
+    // document.saleStatus = '';
+    // this.deviceService.saveMatchSale(document).then(async (resp) => {
+    //   if (resp) {
+    //     const toast = await this.toastController.create({
+    //       message: 'updated successfully',
+    //       duration: 2000,
+    //     });
+    //     toast.present();
+
+    //     this.ngOnInit();
+    //   } else {
+    //     console.log('sales couldnt be removed');
+    //   }
+    // });
   }
 
   async viewPicture(document: any) {

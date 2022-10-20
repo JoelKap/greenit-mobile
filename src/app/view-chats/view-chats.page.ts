@@ -4,6 +4,8 @@ import {
   AlertController,
   LoadingController,
   ModalController,
+  NavController,
+  ToastController,
 } from '@ionic/angular';
 import { DeviceService } from '../service/device.service';
 
@@ -22,11 +24,12 @@ export class ViewChatsPage implements OnInit {
     public modalController: ModalController,
     public alertController: AlertController,
     public loadingController: LoadingController,
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private toastController: ToastController,
+    private navCtrl: NavController
   ) {}
 
   async ngOnInit(): Promise<void> {
-    debugger;
     await this.getMatchedDevice();
   }
 
@@ -55,24 +58,22 @@ export class ViewChatsPage implements OnInit {
       duration: 2000,
     });
     await loading.present();
-    const docs = this.deviceService.getmatchedSales('');
+    const docs = this.deviceService.getmatchedSales(
+      localStorage.getItem('userEmail')
+    );
 
     docs.valueChanges().subscribe((resp) => {
       this.saleDevices.length = 0;
       if (resp.length) {
         for (let i = 0; i < resp.length; i++) {
           const element = resp[i];
-          if (
-            element.email === localStorage.getItem('userEmail') ||
-            element.buyerEmail == localStorage.getItem('userEmail')
-          )
-            this.saleDevices.push(element);
+          this.saleDevices.push(element);
         }
       }
       this.deviceService
         .getChatlostDocs(localStorage.getItem('userEmail'))
-        .subscribe((lostDocs) => {
-          var docs = lostDocs;
+        .subscribe((devices) => {
+          var docs = devices;
           for (let i = 0; i < docs.length; i++) {
             const doc = docs[i];
             this.deviceService.getUserChats(doc.id).subscribe((chats) => {
@@ -87,7 +88,7 @@ export class ViewChatsPage implements OnInit {
                     const doc = chatDocuments[i];
                     doc.isFoundUser = true;
                     const docToSave = this.saleDevices.find(
-                      (x) => x.lostId === doc.lostId
+                      (x) => x.deviceId === doc.deviceId
                     );
                     if (!docToSave) this.saleDevices.push(doc);
                   }
@@ -96,6 +97,46 @@ export class ViewChatsPage implements OnInit {
             });
           }
         });
+    });
+  }
+
+  sold(device: any) {
+    device.saleStatus = 'SOLD';
+    device.isFound = true;
+    this.deviceService.saveSoldDevice(device).then(async (resp) => {
+      if (resp) {
+        const toast = await this.toastController.create({
+          message: 'thank you for using our service',
+          duration: 2000,
+        });
+        toast.present();
+        this.navCtrl.navigateForward([`/tabs/tab${2}`]);
+      } else {
+        alert('something went wrong, please contact admin!');
+        console.log('something went wrong, please contact admin!');
+      }
+    });
+  }
+
+  cancel(device: any) {
+    debugger;
+    device.saleStatus = 'ON SALE';
+    device.isFound = false;
+    delete device.email;
+    this.deviceService.updateDeviceFromSale(device).then(async (resp) => {
+      if (resp) {
+        this.deviceService.deleteChatSale(device).then(async (resp) => {
+          const toast = await this.toastController.create({
+            message: 'updated successfully',
+            duration: 2000,
+          });
+          toast.present();
+          this.navCtrl.navigateForward([`/tabs/tab${2}`]);
+        });
+      } else {
+        alert('something went wrong, please contact admin!');
+        console.log('something went wrong, please contact admin!');
+      }
     });
   }
 }

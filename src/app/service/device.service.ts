@@ -65,6 +65,10 @@ export class DeviceService {
     return this.deviceHttp.saveRepairDevice(device, company);
   }
 
+  deleteChatSale(device: any) {
+    return this.deviceHttp.deleteChatSale(device);
+  }
+
   saveFoundDoc(doc: any) {
     return this.deviceHttp.saveFoundDoc(doc);
   }
@@ -73,7 +77,15 @@ export class DeviceService {
     this.device = doc;
   }
 
-  getDocFromStore() {
+  saveSoldDevice(device: any) {
+    return this.deviceHttp.saveSoldDevice(device);
+  }
+
+  saveMatchSale(device: any) {
+    return this.deviceHttp.saveMatchSale(device);
+  }
+
+  getDeviceFromStore() {
     return this.device;
   }
 
@@ -103,6 +115,14 @@ export class DeviceService {
 
   getRepairedCompanies(): any {
     return this.deviceHttp.getRepairedCompanies();
+  }
+
+  searchDeviceHistory(str: any) {
+    return this.deviceHttp.searchDeviceHistory(str);
+  }
+
+  searchDeviceSerial(value: any) {
+    return this.deviceHttp.searchDeviceSerial(value);
   }
 
   sendMessage(message: any) {

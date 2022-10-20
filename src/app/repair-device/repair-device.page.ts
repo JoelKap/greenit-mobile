@@ -45,7 +45,7 @@ export class RepairDevicePage implements OnInit {
     });
     await loading.present();
 
-    this.device = this.deviceService.getDocFromStore();
+    this.device = this.deviceService.getDeviceFromStore();
     if (_.isEmpty(this.device))
       return this.navCtrl.navigateForward([`/tabs/tab${1}`]);
 
@@ -74,38 +74,37 @@ export class RepairDevicePage implements OnInit {
   }
 
   repair(company: any) {
+    debugger;
     if (company) {
       this.device.isForSale = false;
       this.device.isFound = false;
       this.device.isDeleted = false;
       this.device.saleStatus = 'UNDER REPAIR';
       this.device.isUpdate = false;
-      this.deviceService
-        .updateDeviceFromSale(this.device)
-        .then(async (resp) => {
-          if (resp) {
-            this.deviceService
-              .saveRepairDevice(this.device, company)
-              .then(async (res) => {
-                if (res) {
-                  const toast = await this.toastController.create({
-                    message: 'device sent for repair successfully',
-                    duration: 2000,
-                  });
-                  toast.present();
-                  return this.navCtrl.navigateForward([`/tabs/tab${1}`]);
-                } else {
-                  alert(
-                    'device couldnt be sent for repair, Please contact admin!'
-                  );
-                  console.log('device couldnt be sent for repair');
-                }
-              });
-          } else {
-            alert('device couldnt be sent for repair, Please contact admin!');
-            console.log('device couldnt be recycled');
-          }
-        });
+      this.deviceService.saveMatchSale(this.device).then(async (resp) => {
+        if (resp) {
+          this.deviceService
+            .saveRepairDevice(this.device, company)
+            .then(async (res) => {
+              if (res) {
+                const toast = await this.toastController.create({
+                  message: 'device sent for repair successfully',
+                  duration: 2000,
+                });
+                toast.present();
+                return this.navCtrl.navigateForward([`/tabs/tab${1}`]);
+              } else {
+                alert(
+                  'device couldnt be sent for repair, Please contact admin!'
+                );
+                console.log('device couldnt be sent for repair');
+              }
+            });
+        } else {
+          alert('device couldnt be sent for repair, Please contact admin!');
+          console.log('device couldnt be recycled');
+        }
+      });
 
       this.ngOnInit();
     }
