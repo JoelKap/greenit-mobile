@@ -18,7 +18,7 @@
     </ion-item>
 
     <ion-item *ngIf="isElectrical">
-      <ion-label>Electrical Sub category</ion-label>
+      <ion-label>Category</ion-label>
       <ion-select
         placeholder=""
         (ionChange)="onElectricalSubCategoryChanged($event)"
@@ -49,7 +49,7 @@
     </ion-item>
 
     <ion-item *ngIf="isElectrical === false">
-      <ion-label>Electronic Sub category</ion-label>
+      <ion-label>Category</ion-label>
       <ion-select
         placeholder=""
         (ionChange)="onElectronicSubCategoryChanged($event)"
@@ -67,7 +67,7 @@
     </ion-item>
 
     <ion-item *ngIf="isElectricalSubCat">
-      <ion-label>Electrical Brand</ion-label>
+      <ion-label>Brand</ion-label>
       <ion-select placeholder="" (ionChange)="onBrandElectricalChanged($event)">
         <ion-select-option value="KIC">KIC</ion-select-option>
         <ion-select-option value="Bennet Read">Bennet Read</ion-select-option>
@@ -103,7 +103,7 @@
     </ion-item>
 
     <ion-item *ngIf="isElectrical === false">
-      <ion-label>Electronic Brand</ion-label>
+      <ion-label>Brand</ion-label>
       <ion-select placeholder="" (ionChange)="onBrandElectronicChanged($event)">
         <ion-select-option value="Sony">Sony</ion-select-option>
         <ion-select-option value="Samsung">Samsung</ion-select-option>
@@ -116,21 +116,6 @@
         <ion-select-option value="Hisense">Hisense</ion-select-option>
         <ion-select-option value="Motorola">Motorola</ion-select-option>
         <ion-select-option value="Honor">Honor</ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Warranty</ion-label>
-      <ion-select placeholder="" (ionChange)="onDeviceWarantee($event)">
-        <ion-select-option value="OUT OF WARANTY"
-          >Out of warranty</ion-select-option
-        >
-        <ion-select-option value="6 MONTHS">6 Months</ion-select-option>
-        <ion-select-option value="12 MONTHS">12 Months</ion-select-option>
-        <ion-select-option value="2 YEARS">2 Years</ion-select-option>
-        <ion-select-option value="3 YEARS">3 Years</ion-select-option>
-        <ion-select-option value="5 YEARS">5 Years</ion-select-option>
-        <ion-select-option value="5 YEARS PLUS">5 Years Plus</ion-select-option>
       </ion-select>
     </ion-item>
 
@@ -197,6 +182,21 @@
         formControlName="datePurchased"
         value="2002-09-23T15:03:46.789"
       ></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Warranty</ion-label>
+      <ion-select placeholder="" (ionChange)="onDeviceWarantee($event)">
+        <ion-select-option value="OUT OF WARANTY"
+          >Out of warranty</ion-select-option
+        >
+        <ion-select-option value="6 MONTHS">6 Months</ion-select-option>
+        <ion-select-option value="12 MONTHS">12 Months</ion-select-option>
+        <ion-select-option value="2 YEARS">2 Years</ion-select-option>
+        <ion-select-option value="3 YEARS">3 Years</ion-select-option>
+        <ion-select-option value="5 YEARS">5 Years</ion-select-option>
+        <ion-select-option value="5 YEARS PLUS">5 Years Plus</ion-select-option>
+      </ion-select>
     </ion-item>
 
     <!-- <ion-item>

@@ -1,6 +1,11 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-title style="font-size: small"> Purchase History </ion-title>
+    <ion-icon
+    name="information-circle-outline"
+    (click)="info()"
+    slot="start"
+  ></ion-icon>
   </ion-toolbar>
 </ion-header>
 
@@ -38,7 +43,7 @@
         </label>
       </div>
       <label vertical="left" style="font-size: 12px">
-        Status: {{device.saleStatus}}
+        Status: {{'Purchased'}}
       </label>
     </ion-card-content>
   </ion-card>

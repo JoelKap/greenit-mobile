@@ -1,14 +1,23 @@
 <ion-header>
   <ion-toolbar color="primary">
-    <ion-title style="font-size: small">Seach device history </ion-title>
+    <ion-title style="font-size: small">Home</ion-title>
+    <ion-icon name="home-outline" slot="start"></ion-icon>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="login()">
-      <ion-icon name="lock-closed-outline"></ion-icon>
+  <ion-fab vertical="bottom" horizontal="end">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
     </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="info()" data-desc="Contact us">
+        <ion-icon name="information-circle-outline"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="login()" data-desc="Login">
+        <ion-icon name="lock-closed-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
   </ion-fab>
 
   <form class="form" [formGroup]="deviceHistoryForm">
@@ -16,7 +25,7 @@
       <ion-input
         type="text"
         formControlName="search"
-        placeholder="search using serial/imei #"
+        placeholder="search using serial or imei #"
       ></ion-input>
       <ion-button
         type="submit"
@@ -28,26 +37,36 @@
       >
     </ion-item>
   </form>
-  <br /><br /><br />
-  <div class="articlez" *ngIf="articles && articles.length">
-    <!-- List of Popular News  -->
-    <ion-list no-lines *ngFor="let article of articles">
-      <ion-item>
-        <!-- Feature Image -->
-        <ion-thumbnail class="picturez" item-start>
-          <img src="../../assets/images/3.jpg" />
-        </ion-thumbnail>
-        <!-- Article Title -->
-        <h2 text-wrap style="padding-left: 20px; font-size: 20px">
-          {{article.title | slice:0:40}}
-          <span *ngIf="article.title.length > 40">...</span>
-        </h2>
-        <!-- Created Date -->
-        <p>
-          <ion-icon name="timer" style="color: #d32f2f"></ion-icon>
-          <span> &nbsp; {{ article.timestamp | date}}</span>
+
+  <br />
+
+  <ion-slides pager="true">
+    <!-- Slide 1 -->
+    <ion-slide>
+      <ion-text color="dark">
+        <img src="../../assets/images/s1.png" />
+        <h1>Buy or sell your devices</h1>
+        <p style="font-size: small; text-align: center">
+          As simple as 1 2 3...
         </p>
-      </ion-item>
-    </ion-list>
-  </div>
+        <ion-button (click)="next()" fill="outline" color="dark"
+          >Next</ion-button
+        >
+      </ion-text>
+    </ion-slide>
+
+    <!-- Slide 2 -->
+    <ion-slide>
+      <ion-text color="dark">
+        <img src="../../assets/images/s4.png" />
+        <h1>Recycle and repair devices</h1>
+        <p style="font-size: small; text-align: center">
+          Recycle your devices or get it repaired
+        </p>
+        <ion-button (click)="previous()" fill="outline" color="dark"
+          >Previous</ion-button
+        >
+      </ion-text>
+    </ion-slide>
+  </ion-slides>
 </ion-content>

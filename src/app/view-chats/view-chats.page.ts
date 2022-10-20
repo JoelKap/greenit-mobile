@@ -64,6 +64,7 @@ export class ViewChatsPage implements OnInit {
 
     docs.valueChanges().subscribe((resp) => {
       this.saleDevices.length = 0;
+      debugger;
       if (resp.length) {
         for (let i = 0; i < resp.length; i++) {
           const element = resp[i];
@@ -103,14 +104,29 @@ export class ViewChatsPage implements OnInit {
   sold(device: any) {
     device.saleStatus = 'SOLD';
     device.isFound = true;
+    debugger;
     this.deviceService.saveSoldDevice(device).then(async (resp) => {
       if (resp) {
-        const toast = await this.toastController.create({
-          message: 'thank you for using our service',
-          duration: 2000,
+        this.deviceService.updateDeviceFromSale(device).then(async (resp) => {
+          if (resp) {
+            this.deviceService
+              .updateSalesChatDevice(device)
+              .then(async (resp) => {
+                if (resp) {
+                  const toast = await this.toastController.create({
+                    message: 'thank you for using our service',
+                    duration: 2000,
+                  });
+                  toast.present();
+                  this.navCtrl.navigateForward([`/tabs/tab${2}`]);
+                } else {
+                  alert('devices was not updated! please contact admin');
+                }
+              });
+          } else {
+            alert('devices was not updated! please contact admin');
+          }
         });
-        toast.present();
-        this.navCtrl.navigateForward([`/tabs/tab${2}`]);
       } else {
         alert('something went wrong, please contact admin!');
         console.log('something went wrong, please contact admin!');

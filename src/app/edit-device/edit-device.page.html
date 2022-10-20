@@ -24,7 +24,7 @@
     </ion-item>
 
     <ion-item *ngIf="isElectrical">
-      <ion-label>Electrical Sub category</ion-label>
+      <ion-label>Category</ion-label>
       <ion-select
         placeholder=""
         [(ngModel)]="electricalSub"
@@ -41,7 +41,7 @@
     </ion-item>
 
     <ion-item *ngIf="isElectrical === false">
-      <ion-label>Electronic Sub category</ion-label>
+      <ion-label>Category</ion-label>
       <ion-select
         placeholder=""
         [(ngModel)]="electronicSub"
@@ -58,7 +58,7 @@
     </ion-item>
 
     <ion-item *ngIf="isElectrical">
-      <ion-label>Electrical Brand</ion-label>
+      <ion-label>Brand</ion-label>
       <ion-select
         placeholder=""
         [(ngModel)]="elecBrand"
@@ -75,7 +75,7 @@
     </ion-item>
 
     <ion-item *ngIf="isElectrical === false">
-      <ion-label>Electronic Brand</ion-label>
+      <ion-label>Brand</ion-label>
       <ion-select
         placeholder=""
         [(ngModel)]="brand"
@@ -84,23 +84,6 @@
       >
         <ion-select-option [value]="brand" *ngFor="let brand of brands">
           {{brand}}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-
-    <ion-item>
-      <ion-label>Warranty</ion-label>
-      <ion-select
-        placeholder=""
-        [(ngModel)]="warranty"
-        [ngModelOptions]="{standalone: true}"
-        (ionChange)="onDeviceWarantee($event)"
-      >
-        <ion-select-option
-          [value]="warranty.value"
-          *ngFor="let warranty of warrantees"
-        >
-          {{warranty.text}}
         </ion-select-option>
       </ion-select>
     </ion-item>
@@ -160,6 +143,7 @@
         type="text"
         formControlName="serial"
         class="form-controll"
+        readonly="readonly"
       ></ion-input>
     </ion-item>
 
@@ -185,6 +169,23 @@
         formControlName="datePurchased"
         value="2002-09-23T15:03:46.789"
       ></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Warranty</ion-label>
+      <ion-select
+        placeholder=""
+        [(ngModel)]="warranty"
+        [ngModelOptions]="{standalone: true}"
+        (ionChange)="onDeviceWarantee($event)"
+      >
+        <ion-select-option
+          [value]="warranty.value"
+          *ngFor="let warranty of warrantees"
+        >
+          {{warranty.text}}
+        </ion-select-option>
+      </ion-select>
     </ion-item>
 
     <!-- <ion-item hidden>

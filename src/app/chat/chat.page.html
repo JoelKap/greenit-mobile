@@ -10,20 +10,31 @@
 <ion-content>
   <ion-grid>
     <ion-row *ngFor="let message of messages">
-      <ion-col col-9 *ngIf="message.from!=='CurrentUser'" class="message"
-        [ngClass]="{'mymessage': message.from === 'CurrentUser', 'othermessage': message.from !== 'CurrentUser'}">
-        <span style="color: #000;">{{ message.text }}</span>
-        <br>
-        <div class="time" style="color: #000 !important;font-size: 10px;">{{message.created.seconds * 1000 |
-          date:'medium'}}</div>
+      <ion-col
+        col-9
+        *ngIf="message.from!=='CurrentUser'"
+        class="message"
+        [ngClass]="{'mymessage': message.from === 'CurrentUser', 'othermessage': message.from !== 'CurrentUser'}"
+      >
+        <span style="color: #000">{{ message.text }}</span>
+        <br />
+        <div class="time" style="color: #000 !important; font-size: 10px">
+          {{message.created.seconds * 1000 | date:'medium'}}
+        </div>
       </ion-col>
 
-      <ion-col offset-3 col-9 *ngIf="message.from==='CurrentUser'" class="message"
-        [ngClass]="{'mymessage': message.from === 'CurrentUser', 'othermessage': message.from !== 'CurrentUser'}">
+      <ion-col
+        offset-3
+        col-9
+        *ngIf="message.from==='CurrentUser'"
+        class="message"
+        [ngClass]="{'mymessage': message.from === 'CurrentUser', 'othermessage': message.from !== 'CurrentUser'}"
+      >
         <span>{{ message.text }}</span>
-        <br>
-        <div class="time" style="color: white !important;font-size: 10px;">{{message.created.seconds * 1000 |
-          date:'medium'}}</div>
+        <br />
+        <div class="time" style="color: white !important; font-size: 10px">
+          {{message.created.seconds * 1000 | date:'medium'}}
+        </div>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -32,8 +43,17 @@
   <ion-item>
     <form class="form" [formGroup]="chatForm">
       <ion-label position="floating">Message</ion-label>
-      <ion-input type="text" #Cmessage (keyup.enter)="submitMessage()" formControlName="message" class="form-controll"
-        required></ion-input>
+      <ion-input
+        type="text"
+        #Cmessage
+        (keyup.enter)="submitMessage()"
+        formControlName="message"
+        class="form-controll"
+        required
+      ></ion-input>
     </form>
+    <!-- <ion-button type="button" expand="block" (click)="submitMessage()">
+      Send
+    </ion-button> -->
   </ion-item>
 </ion-footer-bar>

@@ -81,7 +81,7 @@ export class DeviceHttp {
         ref
           .where('email', '==', email)
           .where('isDeleted', '==', false)
-          .where('saleStatus', 'in', ['ON SALE', ''])
+          .where('saleStatus', 'in', ['ON SALE', 'IN PROGRESS', ''])
       )
       .valueChanges();
   }
@@ -111,6 +111,18 @@ export class DeviceHttp {
   async updateDeviceFromSale(doc: any): Promise<any> {
     try {
       await this.firestore.collection('devices').doc(doc.id).update(doc);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  async updateSalesChatDevice(device: any) {
+    try {
+      await this.firestore
+        .collection('saleChats')
+        .doc(device.deviceId)
+        .update(device);
       return true;
     } catch {
       return false;

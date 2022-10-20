@@ -53,6 +53,10 @@ export class DeviceService {
     return this.deviceHttp.getUserDevicesForRecycle(email);
   }
 
+  updateSalesChatDevice(device: any) {
+    return this.deviceHttp.updateSalesChatDevice(device);
+  }
+
   saveRecycleDevice(device: any, company: any) {
     return this.deviceHttp.saveRecycleDevice(device, company);
   }

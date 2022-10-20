@@ -185,7 +185,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
 
   navigateTo() {
     return;
-  }
+  } 
 
   async initializePreview(id: any) {
     const options: CameraOptions = {

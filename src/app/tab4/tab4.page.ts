@@ -211,4 +211,25 @@ export class Tab4Page implements OnInit {
       this.navCtrl.navigateForward(['view-picture']);
     }
   }
+
+  info() {
+    return new Promise((resolve, reject) => {
+      this.alertController
+        .create({
+          header: 'Contact us',
+          message: `<p>Tsepo </p> <p> C: 084 600 4672</p> <hr/> 
+                    <p>Keo </p> <p> C: 083 952 1543</p> <hr/>
+                    <p>Hellen </p> <p> C: 076 489 6399</p>`,
+          buttons: [
+            {
+              text: 'OK',
+              handler: () => resolve(this.navigateToTab()),
+            },
+          ],
+        })
+        .then((alert) => {
+          alert.present();
+        });
+    });
+  }
 }
