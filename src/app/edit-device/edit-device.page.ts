@@ -210,8 +210,8 @@ export class EditDevicePage implements OnInit {
     this.type = this.device.deviceType;
     this.selectedDeviceType = this.type;
 
+    debugger;
     this.electricalSub = this.device.deviceSubCat;
-
     this.electronicSub = this.device.deviceSubCat;
 
     this.selectedDeviceSubCat =
@@ -363,7 +363,11 @@ export class EditDevicePage implements OnInit {
     this.isElectricalSubCat = false;
     if (event.detail.value === 'Mobile Phone') {
       this.isMobile = true;
+    } else {
+      this.isMobile = false;
+      this.deviceForm.controls.imei.setValue('');
     }
+
     this.selectedDeviceSubCat = event.detail.value;
   }
 

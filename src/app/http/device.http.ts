@@ -86,6 +86,17 @@ export class DeviceHttp {
       .valueChanges();
   }
 
+  getUserDeviceHistory(email: string): any {
+    return this.firestore
+      .collection<any>(`devices`, (ref) =>
+        ref
+          .where('email', '==', email)
+          .where('isDeleted', '==', false)
+          .where('saleStatus', 'in', ['SOLD'])
+      )
+      .valueChanges();
+  }
+
   getMarketDevices(): Observable<any[]> {
     return this.firestore
       .collection<any>(`devices`, (ref) =>

@@ -109,6 +109,10 @@ export class DeviceService {
     return this.deviceHttp.updateDoc(selectedDoc);
   }
 
+  getUserDeviceHistory(email: string): any {
+    return this.deviceHttp.getUserDeviceHistory(email);
+  }
+
   getUserChats(id: any) {
     return this.deviceHttp.getUserChats(id);
   }

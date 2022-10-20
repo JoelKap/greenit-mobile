@@ -1,6 +1,6 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar color="primary">
-    <ion-title style="font-size: small">Purchase History </ion-title>
+    <ion-title style="font-size: small"> Purchase History </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -11,4 +11,35 @@
     [(ngModel)]="term"
     animated="true"
   ></ion-searchbar>
+
+  <ion-card color="light" *ngFor="let device of devices | filter:term">
+    <div
+      class="img-wrapper"
+      (click)="viewDevice(device)"
+      style="padding-top: 15px"
+    >
+      <img *ngIf="!device.imageUrl" src="../../assets/images/no_image.png" />
+      <img *ngIf="device.imageUrl" [src]="device.imageUrl" />
+      <ion-button color="light">
+        <ion-icon slot="icon-only" name="camera-outline" color="medium">
+        </ion-icon>
+      </ion-button>
+    </div>
+    <ion-card-content class="ion-text-center" style="margin-bottom: 40px">
+      <h2>{{device.deviceBrand}} {{device.deviceModel}}</h2>
+      <ion-text color="medium">
+        <div style="display: flex" class="ion-justify-content-center">
+          <p>R {{device.price}}</p>
+        </div>
+      </ion-text>
+      <div>
+        <label vertical="left" style="font-size: 12px">
+          {{device.description}}
+        </label>
+      </div>
+      <label vertical="left" style="font-size: 12px">
+        Status: {{device.saleStatus}}
+      </label>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
