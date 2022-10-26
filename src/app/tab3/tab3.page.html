@@ -21,7 +21,7 @@
     <ion-item>
       <ion-thumbnail slot="start">
         <img *ngIf="!company.imageUrl" src="../../assets/images/no_image.png" />
-        <!-- <img *ngIf="company.imageUrl" [src]="device.imageUrl" /> -->
+        <img *ngIf="company.imageUrl" [src]="company.imageUrl" />
       </ion-thumbnail>
       <div (click)="recycle(company)">
         <h6 style="font-weight: 500">{{company.name}}</h6>

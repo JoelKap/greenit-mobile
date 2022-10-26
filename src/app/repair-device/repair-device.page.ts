@@ -1,9 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
+  AlertController,
   LoadingController,
   NavController,
   ToastController,
 } from '@ionic/angular';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { DeviceService } from '../service/device.service';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
@@ -20,9 +22,10 @@ export class RepairDevicePage implements OnInit {
   device: any;
   companies$: any;
   companies: any[] = [];
+  commentForm: FormGroup;
   companiesLodash: any[] = [];
-
   uploadProgress = 0;
+  isSubmitting: boolean = false;
 
   @ViewChild('previewimage') waterMarkImage: ElementRef;
   originalImage = null;
@@ -34,10 +37,16 @@ export class RepairDevicePage implements OnInit {
     private storage: AngularFireStorage,
     private navCtrl: NavController,
     private toastController: ToastController,
-    public firestore: AngularFirestore
-  ) {}
+    public alertController: AlertController,
+    public firestore: AngularFirestore,
+    private fb: FormBuilder,
+  ) {
+    
+  }
 
   async ngOnInit() {
+    this.createCommentForm();
+
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
@@ -56,53 +65,99 @@ export class RepairDevicePage implements OnInit {
       this.companies.length = 0;
       this.companiesLodash.length = 0;
       arr = company;
-      // arr.forEach((company) => {
-      //   debugger;
-      //   this.storage
-      //     .ref(`/deviceFiles/${company.companyId}`)
-      //     .getDownloadURL()
-      //     .toPromise()
-      //     .then((url) => {
-      //       if (url) {
-      //         company.imageUrl = url;
-      //       }
-      //     });
-      // });
+      arr.forEach((company) => {
+        this.storage
+          .ref(`/deviceFiles/${company.companyId}`)
+          .getDownloadURL()
+          .toPromise()
+          .then((url) => {
+            if (url) {
+              company.imageUrl = url;
+            }
+          });
+      });
       this.companiesLodash = _.orderBy(arr, ['createdAt'], ['desc']);
       this.companies.push.apply(this.companies, this.companiesLodash);
     });
   }
 
-  repair(company: any) {
-    debugger;
+  private createCommentForm() {
+    this.commentForm = this.fb.group({
+      comment: [''],
+    });
+  }
+
+  save(){
+    this.isSubmitting = true;
+  }
+
+  companyInfo(company: any) {
+      return new Promise((resolve, reject) => {
+        this.alertController
+          .create({
+            header: 'Services',
+            message: `<p>${company.address} </p> <hr/> 
+                      <p>${company.services}</p> <hr/>`,
+            buttons: [
+              {
+                text: 'OK',
+                handler: () => resolve(this.navigateToTab()),
+              },
+            ],
+          })
+          .then((alert) => {
+            alert.present();
+          });
+      });
+  }
+
+  navigateToTab() {
+    return;
+  }
+
+  async repair(company: any) {
+
+    if(!this.commentForm.controls.comment.value)
+        return;
+
+    const loading = await this.loadingController.create({
+      cssClass: 'my-custom-class',
+      message: 'Please wait...',
+      duration: 2000,
+    });
+    await loading.present();
+
     if (company) {
-      this.device.isForSale = false;
       this.device.isFound = false;
-      this.device.isDeleted = false;
-      this.device.saleStatus = 'UNDER REPAIR';
       this.device.isUpdate = false;
+      this.device.isDeleted = false;
+      this.device.isForSale = false;
+      this.device.emailSent = false;
+      this.device.saleStatus = 'UNDER REPAIR';
+      this.device.comment = this.commentForm.controls.comment.value;
+      this.device.deviceId = this.device.id;
       this.deviceService.saveMatchSale(this.device).then(async (resp) => {
         if (resp) {
           this.deviceService
             .saveRepairDevice(this.device, company)
             .then(async (res) => {
               if (res) {
-                const toast = await this.toastController.create({
-                  message: 'device sent for repair successfully',
-                  duration: 2000,
-                });
-                toast.present();
+                alert(
+                  'device repair requested successfully, Please note an email confirmation will be sent to your registered email'
+                );
+                loading.dismiss();
                 return this.navCtrl.navigateForward([`/tabs/tab${1}`]);
               } else {
+                loading.dismiss();
                 alert(
                   'device couldnt be sent for repair, Please contact admin!'
                 );
-                console.log('device couldnt be sent for repair');
               }
+              loading.dismiss();
             });
         } else {
+          loading.dismiss();
           alert('device couldnt be sent for repair, Please contact admin!');
-          console.log('device couldnt be recycled');
         }
       });
 

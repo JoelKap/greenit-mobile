@@ -12,6 +12,7 @@ import {
   NavController,
   ToastController,
 } from '@ionic/angular';
+import { Observable, of } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { DeviceService } from '../service/device.service';
 
@@ -107,19 +108,36 @@ export class AddDevicePage implements OnInit, OnDestroy {
       duration: 2000,
     });
     await loading.present();
-    const subs$ = this.deviceService.getFoundBy(
-      localStorage.getItem('userEmail')
-    );
+    const subs$ = this.deviceService.getFoundBy(localStorage.getItem('userEmail'));
     this.users$ = subs$.pipe(take(1)).subscribe((users) => {
       const id = this.firestore.createId();
-      this.deviceForm.controls['owner'].setValue(
-        users[0].name + ' ' + users[0].lastname
-      );
+      this.deviceForm.controls['owner'].setValue(users[0].name + ' ' + users[0].lastname);
 
+      var exist = of();
       var imei = this.deviceForm.controls.imei.value;
-      var exist = this.firestore
+      if(imei === ""){
+        this.deviceForm.controls.imei.setValue('NO IMEI')
+        // return exist
+        // .pipe(
+        //   map((item: any) => {
+        //     return [];
+        //   })
+        // );
+      } else {
+        exist = this.firestore
         .collection<any>(`devices`, (ref) => {
-          return ref.where('imei', '==', imei).limit(1);
+          return ref.where('imei', '==', this.deviceForm.controls['imei'].value).limit(1);
+        })
+        .get()
+        .pipe(
+          map((item: any) => {
+            return item.docs.map((dataItem: any) => dataItem.data());
+          })
+        );
+      }
+      exist = this.firestore
+        .collection<any>(`devices`, (ref) => {
+          return ref.where('imei', '==', this.deviceForm.controls['imei'].value).limit(1);
         })
         .get()
         .pipe(
@@ -168,6 +186,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
             });
           }
         } else {
+
           this.firestore
             .doc(`devices/${id}`)
             .set({

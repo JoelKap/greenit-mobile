@@ -139,7 +139,7 @@ export class IntroPage implements OnInit, OnDestroy {
 
   setResponse(resp: any, value: any) {
     const device = resp;
-    if (device.saleStatus === 'LOST' || device.saleStatus === 'STOLEN') {
+    if (device.status === 'LOST' || device.status === 'STOLEN') {
       return new Promise((resolve, reject) => {
         this.alertController
           .create({

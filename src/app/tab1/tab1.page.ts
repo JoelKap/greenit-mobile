@@ -122,10 +122,11 @@ export class Tab1Page implements OnInit {
           document.datePurchased,
           'short'
         );
+        const imeiSerial = document.imei === 'NO IMEI' ? document.serial : document.imei;
         this.alertController
           .create({
             header: document.documentType,
-            message: `EMEI: ${document.imei}`,
+            message: `${imeiSerial}`,
             buttons: [
               {
                 text: 'Close',
@@ -167,10 +168,11 @@ export class Tab1Page implements OnInit {
           document.datePurchased,
           'short'
         );
+        const imeiSerial = document.imei === 'NO IMEI' ? document.serial : document.imei;
         this.alertController
           .create({
             header: document.documentType,
-            message: `EMEI: ${document.imei}`,
+            message: `${imeiSerial}`,
             buttons: [
               {
                 text: 'Close',

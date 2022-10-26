@@ -77,11 +77,12 @@ export class ViewDeviceForRecyclePage implements OnInit {
   }
 
   async recycleDevice(device: any) {
-    device.isForSale = false;
     device.isFound = false;
     device.isDeleted = true;
-    device.saleStatus = 'RECYCLED';
     device.isUpdate = false;
+    device.emailSent = false;
+    device.isForSale = false;
+    device.saleStatus = 'RECYCLED';
     this.deviceService.saveMatchSale(device).then(async (resp) => {
       if (resp) {
         this.deviceService

@@ -51,18 +51,18 @@ export class Tab3Page implements OnInit {
       this.companies.length = 0;
       this.companiesLodash.length = 0;
       arr = company;
-      // arr.forEach((company) => {
-      //   debugger;
-      //   this.storage
-      //     .ref(`/deviceFiles/${company.companyId}`)
-      //     .getDownloadURL()
-      //     .toPromise()
-      //     .then((url) => {
-      //       if (url) {
-      //         company.imageUrl = url;
-      //       }
-      //     });
-      // });
+      arr.forEach((company) => {
+        debugger;
+        this.storage
+          .ref(`/deviceFiles/${company.companyId}`)
+          .getDownloadURL()
+          .toPromise()
+          .then((url) => {
+            if (url) {
+              company.imageUrl = url;
+            }
+          });
+      });
       this.companiesLodash = _.orderBy(arr, ['createdAt'], ['desc']);
       this.companies.push.apply(this.companies, this.companiesLodash);
     });
@@ -70,7 +70,6 @@ export class Tab3Page implements OnInit {
 
   recycle(company: any) {
     if (company) {
-      //localStorage.setItem('id', document.id);
       this.deviceService.saveCompanyToStore(company);
       this.navCtrl.navigateForward(['view-device-for-recycle']);
     }

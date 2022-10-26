@@ -22,7 +22,7 @@
     <ion-item>
       <ion-thumbnail slot="start">
         <img *ngIf="!company.imageUrl" src="../../assets/images/no_image.png" />
-        <!-- <img *ngIf="company.imageUrl" [src]="device.imageUrl" /> -->
+        <img *ngIf="company.imageUrl" [src]="company.imageUrl" />
       </ion-thumbnail>
       <div (click)="repair(company)">
         <h6 style="font-weight: 500">{{company.name}}</h6>
@@ -33,6 +33,27 @@
           <p>{{company.cellphone}}</p>
         </ion-label>
       </div>
+      <div>
+        <ion-button style="margin-top: 53px;" (click)="save()"><ion-icon name="save-outline"></ion-icon>Save</ion-button>
+        <ion-button style="margin-top: 53px;" (click)="companyInfo(company)"><ion-icon name="information-circle-outline"></ion-icon>Info</ion-button>
+      </div>
+    </ion-item>
+    <ion-item *ngIf="isSubmitting">
+      <form class="form" style="width: -webkit-fill-available;" [formGroup]="commentForm">
+        <ion-item>
+          <ion-label style="width: 100%;" position="floating">Please add Comment</ion-label>
+          <ion-textarea
+            type="text"
+            formControlName="comment"
+            class="form-controll"
+            required
+          ></ion-textarea>
+        </ion-item>
+        <br/>
+          <ion-button type="button" expand="block" (click)="repair(company)">
+            Send
+          </ion-button>
+      </form>
     </ion-item>
   </ion-list>
 </ion-content>
