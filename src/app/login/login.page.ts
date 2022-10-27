@@ -11,14 +11,20 @@ import { AuthenticationService } from '../services/authentication.service';
 })
 export class LoginPage implements OnInit {
   credentials: FormGroup;
-
+  image: any;
   constructor(
     private fb: FormBuilder,
     private authService: AuthenticationService,
     private alertController: AlertController,
     private router: Router,
     private loadingController: LoadingController
-  ) {}
+  ) {
+    this.image = {
+      src: '../assets/images/greenIt.png',
+      alt: 'GreenIt',
+      title: 'GreenIt',
+    };
+  }
 
   ngOnInit() {
     this.credentials = this.fb.group({

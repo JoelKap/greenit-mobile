@@ -210,7 +210,6 @@ export class EditDevicePage implements OnInit {
     this.type = this.device.deviceType;
     this.selectedDeviceType = this.type;
 
-    debugger;
     this.electricalSub = this.device.deviceSubCat;
     this.electronicSub = this.device.deviceSubCat;
 
@@ -290,7 +289,6 @@ export class EditDevicePage implements OnInit {
           duration: 2000,
         });
         toast.present();
-        debugger;
         if (this.deviceForm.controls.saleStatus.value === 'SOLD') {
           this.deviceForm.controls.isFound.setValue(true);
           this.deviceService

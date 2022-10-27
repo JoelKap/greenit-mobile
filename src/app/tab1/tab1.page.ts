@@ -114,18 +114,19 @@ export class Tab1Page implements OnInit {
     this.router.navigateByUrl('/user-more-info');
   }
 
-  async viewDevice(document: any) {
-    this.selectedDoc = document;
-    if (document.isForSale == false) {
+  async viewDevice(device: any) {
+    this.selectedDoc = device;
+    if (device.isForSale == false) {
       return new Promise((resolve, reject) => {
         const datePurchased = this.pipe.transform(
-          document.datePurchased,
+          device.datePurchased,
           'short'
         );
-        const imeiSerial = document.imei === 'NO IMEI' ? document.serial : document.imei;
+        const imeiSerial =
+          device.imei === 'NO IMEI' ? device.serial : device.imei;
         this.alertController
           .create({
-            header: document.documentType,
+            header: device.documentType,
             message: `${imeiSerial}`,
             buttons: [
               {
@@ -138,23 +139,24 @@ export class Tab1Page implements OnInit {
                 text: 'View',
                 role: 'Pictures',
                 cssClass: 'secondary',
-                handler: () => resolve(this.viewPicture(document)),
+                handler: () => resolve(this.viewPicture(device)),
               },
               {
                 text: 'Edit',
-                handler: () => resolve(this.editDevice(document)),
+                handler: () => resolve(this.editDevice(device)),
               },
               {
                 text:
-                  document.saleStatus !== 'UNDER REPAIR'
-                    ? 'Send for repair'
-                    : 'device under repair',
-                handler: () => resolve(this.repairDevice(document)),
+                  device.saleStatus === 'UNDER REPAIR'
+                    ? 'Device under repair'
+                    : device.saleStatus === 'CANT REPAIR'
+                    ? `Feedback from repairer: ${device.comment}`
+                    : 'Send for repair',
+                handler: () => resolve(this.repairDevice(device)),
               },
               {
-                text: document.saleStatus !== 'UNDER REPAIR' ? 'Add sale' : '',
-                handler: () =>
-                  resolve(this.AddRemoveSaleDevice(document, true)),
+                text: device.saleStatus !== 'UNDER REPAIR' ? 'Add sale' : '',
+                handler: () => resolve(this.AddRemoveSaleDevice(device, true)),
               },
             ],
           })
@@ -165,13 +167,14 @@ export class Tab1Page implements OnInit {
     } else {
       return new Promise((resolve, reject) => {
         const datePurchased = this.pipe.transform(
-          document.datePurchased,
+          device.datePurchased,
           'short'
         );
-        const imeiSerial = document.imei === 'NO IMEI' ? document.serial : document.imei;
+        const imeiSerial =
+          device.imei === 'NO IMEI' ? device.serial : device.imei;
         this.alertController
           .create({
-            header: document.documentType,
+            header: device.documentType,
             message: `${imeiSerial}`,
             buttons: [
               {
@@ -184,24 +187,24 @@ export class Tab1Page implements OnInit {
                 text: 'View',
                 role: 'Pictures',
                 cssClass: 'secondary',
-                handler: () => resolve(this.viewPicture(document)),
+                handler: () => resolve(this.viewPicture(device)),
               },
               {
                 text: 'Edit',
-                handler: () => resolve(this.editDevice(document)),
+                handler: () => resolve(this.editDevice(device)),
               },
               {
                 text:
-                  document.saleStatus !== 'UNDER REPAIR'
-                    ? 'Send for repair'
-                    : 'device under repair',
-                handler: () => resolve(this.repairDevice(document)),
+                  device.saleStatus === 'UNDER REPAIR'
+                    ? 'Device under repair'
+                    : device.saleStatus === 'CANT REPAIR'
+                    ? `Feedback from repairer: ${device.comment}`
+                    : 'Send for repair',
+                handler: () => resolve(this.repairDevice(device)),
               },
               {
-                text:
-                  document.saleStatus !== 'UNDER REPAIR' ? 'Remove sale' : '',
-                handler: () =>
-                  resolve(this.AddRemoveSaleDevice(document, false)),
+                text: device.saleStatus !== 'UNDER REPAIR' ? 'Remove sale' : '',
+                handler: () => resolve(this.AddRemoveSaleDevice(device, false)),
               },
             ],
           })
@@ -286,7 +289,7 @@ export class Tab1Page implements OnInit {
       this.alertController
         .create({
           header: 'Contact us',
-          message: `<p>Tsepo </p> <p> C: 084 600 4672</p> <hr/> 
+          message: `<p>Tshepo </p> <p> C: 084 600 4672</p> <hr/> 
                     <p>Keo </p> <p> C: 083 952 1543</p> <hr/>
                     <p>Hellen </p> <p> C: 076 489 6399</p>`,
           buttons: [

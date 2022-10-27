@@ -217,7 +217,7 @@ export class Tab4Page implements OnInit {
       this.alertController
         .create({
           header: 'Contact us',
-          message: `<p>Tsepo </p> <p> C: 084 600 4672</p> <hr/> 
+          message: `<p>Tshepo </p> <p> C: 084 600 4672</p> <hr/> 
                     <p>Keo </p> <p> C: 083 952 1543</p> <hr/>
                     <p>Hellen </p> <p> C: 076 489 6399</p>`,
           buttons: [

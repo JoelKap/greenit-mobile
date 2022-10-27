@@ -41,8 +41,12 @@
 </ion-content>
 <ion-footer-bar class="bar-assertive">
   <ion-item>
-    <form class="form" [formGroup]="chatForm">
-      <ion-label position="floating">Message</ion-label>
+    <form
+      class="form"
+      style="width: -webkit-fill-available"
+      [formGroup]="chatForm"
+    >
+      <ion-label style="width: 100%" position="floating">Message</ion-label>
       <ion-input
         type="text"
         #Cmessage
@@ -52,8 +56,9 @@
         required
       ></ion-input>
     </form>
-    <!-- <ion-button type="button" expand="block" (click)="submitMessage()">
-      Send
-    </ion-button> -->
   </ion-item>
+  <br />
+  <ion-button type="button" (click)="submitMessage()" expand="block">
+    Send
+  </ion-button>
 </ion-footer-bar>

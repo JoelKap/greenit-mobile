@@ -17,6 +17,7 @@ import * as _ from 'lodash';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-intro',
@@ -95,22 +96,38 @@ export class IntroPage implements OnInit, OnDestroy {
         duration: 2000,
       });
       await loading.present();
-      this.subscription = this.deviceService
+      var result = this.deviceService
         .searchDeviceHistory(value)
-        .subscribe((resp) => {
-          loading.dismiss();
-          if (resp.length) {
-            this.setResponse(resp[0], value);
-          } else {
-            this.deviceService.searchDeviceSerial(value).subscribe((resp) => {
-              if (resp.length) {
-                this.setResponse(resp[0], value);
-              } else {
-                this.checkAgain(value);
-              }
-            });
-          }
-        });
+        .get()
+        .pipe(
+          map((item: any) => {
+            return item.docs.map((dataItem: any) => dataItem.data());
+          })
+        );
+
+      result.subscribe((resp) => {
+        loading.dismiss();
+        if (resp.length) {
+          return this.setResponse(resp[0], value);
+        } else {
+          var response = this.deviceService
+            .searchDeviceSerial(value)
+            .get()
+            .pipe(
+              map((item: any) => {
+                return item.docs.map((dataItem: any) => dataItem.data());
+              })
+            );
+
+          response.subscribe((resp) => {
+            if (resp.length) {
+              return this.setResponse(resp[0], value);
+            } else {
+              return this.checkAgain(value);
+            }
+          });
+        }
+      });
     }
   }
 
@@ -144,7 +161,7 @@ export class IntroPage implements OnInit, OnDestroy {
         this.alertController
           .create({
             header: 'Device History',
-            message: `This searched device ${value} has been reported ${device.saleStatus}`,
+            message: `This searched device ${value} has been reported ${device.status}`,
             buttons: [
               {
                 text: 'OK',
@@ -193,7 +210,7 @@ export class IntroPage implements OnInit, OnDestroy {
       this.alertController
         .create({
           header: 'Contact us',
-          message: `<p>Tsepo </p> <p> C: 084 600 4672</p> <hr/> 
+          message: `<p>Tshepo </p> <p> C: 084 600 4672</p> <hr/> 
                     <p>Keo </p> <p> C: 083 952 1543</p> <hr/>
                     <p>Hellen </p> <p> C: 076 489 6399</p>`,
           buttons: [

@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController, LoadingController, ToastController } from '@ionic/angular';
+import {
+  AlertController,
+  LoadingController,
+  ToastController,
+} from '@ionic/angular';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
@@ -18,9 +22,9 @@ export class ForgetPasswordPage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController,
     private router: Router,
-    public  afAuth:  AngularFireAuth,
+    public afAuth: AngularFireAuth,
     private loadingController: LoadingController
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.credentials = this.fb.group({
@@ -32,16 +36,16 @@ export class ForgetPasswordPage implements OnInit {
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',
       message: 'Please wait...',
-      duration: 2000
+      duration: 2000,
     });
     await loading.present();
-    debugger;
     this.afAuth.sendPasswordResetEmail(this.credentials.value.email).then(
       async () => {
         // success, show some message
         loading.dismiss();
         const toast = await this.toastController.create({
-          message: 'Submitted successfully, please check your email for a reset link',
+          message:
+            'Submitted successfully, please check your email for a reset link',
           duration: 2000,
         });
         toast.present();
@@ -58,5 +62,4 @@ export class ForgetPasswordPage implements OnInit {
       }
     );
   }
-
 }

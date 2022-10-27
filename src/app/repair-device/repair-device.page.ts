@@ -39,10 +39,8 @@ export class RepairDevicePage implements OnInit {
     private toastController: ToastController,
     public alertController: AlertController,
     public firestore: AngularFirestore,
-    private fb: FormBuilder,
-  ) {
-    
-  }
+    private fb: FormBuilder
+  ) {}
 
   async ngOnInit() {
     this.createCommentForm();
@@ -87,28 +85,28 @@ export class RepairDevicePage implements OnInit {
     });
   }
 
-  save(){
+  save() {
     this.isSubmitting = true;
   }
 
   companyInfo(company: any) {
-      return new Promise((resolve, reject) => {
-        this.alertController
-          .create({
-            header: 'Services',
-            message: `<p>${company.address} </p> <hr/> 
+    return new Promise((resolve, reject) => {
+      this.alertController
+        .create({
+          header: 'Services',
+          message: `<p>${company.address} </p> <hr/> 
                       <p>${company.services}</p> <hr/>`,
-            buttons: [
-              {
-                text: 'OK',
-                handler: () => resolve(this.navigateToTab()),
-              },
-            ],
-          })
-          .then((alert) => {
-            alert.present();
-          });
-      });
+          buttons: [
+            {
+              text: 'OK',
+              handler: () => resolve(this.navigateToTab()),
+            },
+          ],
+        })
+        .then((alert) => {
+          alert.present();
+        });
+    });
   }
 
   navigateToTab() {
@@ -116,9 +114,7 @@ export class RepairDevicePage implements OnInit {
   }
 
   async repair(company: any) {
-
-    if(!this.commentForm.controls.comment.value)
-        return;
+    if (!this.commentForm.controls.comment.value) return;
 
     const loading = await this.loadingController.create({
       cssClass: 'my-custom-class',

@@ -81,7 +81,12 @@ export class DeviceHttp {
         ref
           .where('email', '==', email)
           .where('isDeleted', '==', false)
-          .where('saleStatus', 'in', ['ON SALE', 'IN PROGRESS', ''])
+          .where('saleStatus', 'in', [
+            'ON SALE',
+            'IN PROGRESS',
+            'CANT REPAIR',
+            '',
+          ])
       )
       .valueChanges();
   }
@@ -159,6 +164,10 @@ export class DeviceHttp {
   async saveRecycleDevice(device: any, company: any): Promise<any> {
     try {
       const id = this.firestore.createId();
+      device.deviceId = device.id;
+      device.recycleId = id;
+      device.ownerEmail = device.email;
+      device.companyEmail = company.email;
       await this.firestore.doc(`recycles/${id}`).set({
         ...company,
         ...device,
@@ -174,6 +183,8 @@ export class DeviceHttp {
   async saveRepairDevice(device: any, company: any) {
     try {
       const id = this.firestore.createId();
+      device.repairId = id;
+      device.ownerEmail = device.email;
       await this.firestore.doc(`repairs/${id}`).set({
         ...device,
         ...company,
@@ -299,19 +310,15 @@ export class DeviceHttp {
   }
 
   searchDeviceHistory(str: string) {
-    return this.firestore
-      .collection<any>(`devices`, (ref) => {
-        return ref.where('imei', '==', str).where('isDeleted', '==', false);
-      })
-      .valueChanges();
+    return this.firestore.collection<any>(`devices`, (ref) => {
+      return ref.where('imei', '==', str).where('isDeleted', '==', false);
+    });
   }
 
   searchDeviceSerial(value: any) {
-    return this.firestore
-      .collection<any>(`devices`, (ref) => {
-        return ref.where('serial', '==', value).where('isDeleted', '==', false);
-      })
-      .valueChanges();
+    return this.firestore.collection<any>(`devices`, (ref) => {
+      return ref.where('serial', '==', value).where('isDeleted', '==', false);
+    });
   }
 
   getmatchedSales(email: string) {

@@ -52,7 +52,6 @@ export class Tab3Page implements OnInit {
       this.companiesLodash.length = 0;
       arr = company;
       arr.forEach((company) => {
-        debugger;
         this.storage
           .ref(`/deviceFiles/${company.companyId}`)
           .getDownloadURL()
@@ -75,12 +74,32 @@ export class Tab3Page implements OnInit {
     }
   }
 
+  companyInfo(company: any) {
+    return new Promise((resolve, reject) => {
+      this.alertController
+        .create({
+          header: 'Services',
+          message: `<p>${company.address} </p> <hr/> 
+                      <p>${company.services}</p> <hr/>`,
+          buttons: [
+            {
+              text: 'OK',
+              handler: () => resolve(this.navigateToTab()),
+            },
+          ],
+        })
+        .then((alert) => {
+          alert.present();
+        });
+    });
+  }
+
   info() {
     return new Promise((resolve, reject) => {
       this.alertController
         .create({
           header: 'Contact us',
-          message: `<p>Tsepo </p> <p> C: 084 600 4672</p> <hr/> 
+          message: `<p>Tshepo </p> <p> C: 084 600 4672</p> <hr/> 
                     <p>Keo </p> <p> C: 083 952 1543</p> <hr/>
                     <p>Hellen </p> <p> C: 076 489 6399</p>`,
           buttons: [

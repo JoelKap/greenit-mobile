@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import * as _ from 'lodash';
 import {
   AlertController,
   LoadingController,
@@ -64,10 +65,12 @@ export class ViewChatsPage implements OnInit {
 
     docs.valueChanges().subscribe((resp) => {
       this.saleDevices.length = 0;
-      debugger;
-      if (resp.length) {
-        for (let i = 0; i < resp.length; i++) {
-          const element = resp[i];
+      const result = _.uniqBy(resp, function (e) {
+        return e.deviceId;
+      });
+      if (result.length) {
+        for (let i = 0; i < result.length; i++) {
+          const element = result[i];
           this.saleDevices.push(element);
         }
       }
@@ -104,7 +107,6 @@ export class ViewChatsPage implements OnInit {
   sold(device: any) {
     device.saleStatus = 'SOLD';
     device.isFound = true;
-    debugger;
     this.deviceService.saveSoldDevice(device).then(async (resp) => {
       if (resp) {
         this.deviceService.updateDeviceFromSale(device).then(async (resp) => {
@@ -135,7 +137,6 @@ export class ViewChatsPage implements OnInit {
   }
 
   cancel(device: any) {
-    debugger;
     device.saleStatus = 'ON SALE';
     device.isFound = false;
     delete device.email;

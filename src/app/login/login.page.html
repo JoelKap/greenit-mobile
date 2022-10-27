@@ -11,6 +11,11 @@
   <form (ngSubmit)="login()" [formGroup]="credentials">
     <div class="input-group">
       <ion-item>
+        <div>
+          <img class="center" [src]="image.src" alt="green it" />
+        </div>
+      </ion-item>
+      <ion-item>
         <ion-input
           type="email"
           placeholder="Email"
@@ -42,7 +47,11 @@
       </div>
     </div>
 
-    <ion-button type="submit" expand="block" [disabled]="!credentials.valid"
+    <ion-button
+      type="submit"
+      class="login-btn"
+      expand="block"
+      [disabled]="!credentials.valid"
       >Log in</ion-button
     >
     <ion-button
@@ -57,7 +66,7 @@
       type="button"
       (click)="forgotPassword()"
       expand="block"
-      color="dark"
+      style="color: black"
       fill="clear"
       >Forgot Password!
     </ion-button>

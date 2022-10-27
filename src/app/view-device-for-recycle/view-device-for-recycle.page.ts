@@ -51,7 +51,6 @@ export class ViewDeviceForRecyclePage implements OnInit {
       duration: 2000,
     });
     await loading.present();
-    debugger;
     const email = localStorage.getItem('userEmail');
     this.devices$ = this.deviceService.getUserDevicesForRecycle(email);
     this.devices$.forEach((device) => {
@@ -83,7 +82,7 @@ export class ViewDeviceForRecyclePage implements OnInit {
     device.emailSent = false;
     device.isForSale = false;
     device.saleStatus = 'RECYCLED';
-    this.deviceService.saveMatchSale(device).then(async (resp) => {
+    this.deviceService.updateDeviceFromSale(device).then(async (resp) => {
       if (resp) {
         this.deviceService
           .saveRecycleDevice(device, this.company)
