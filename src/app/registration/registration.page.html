@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -69,14 +69,14 @@
         </div>
       </ng-container>
     </div>
-    <ion-button type="submit" expand="block" [disabled]="!userForm.valid"
+    <ion-button type="submit" class="login-btn" expand="block" [disabled]="!userForm.valid"
       >Register</ion-button
     >
 
     <label class="ion-text-center" color="danger">{{errorMsg}}</label>
     <label class="ion-text-center" color="success">{{successMsg}}</label>
   </form>
-  <p class="ion-text-center" style="color: dark">
-    Already registered? <a (click)="goToLogin()">Login</a>
+  <p class="ion-text-center" style="color: darkgreen">
+    Already registered? <a (click)="goToLogin()" style="color: darkgreen;">Login</a>
   </p>
 </ion-content>

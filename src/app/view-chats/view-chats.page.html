@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -28,6 +28,7 @@
         *ngIf="device.isFoundUser"
         (click)="openChat(device)"
         slot="end"
+        class="login-btn"
         >chat</ion-button
       >
       <ion-button
@@ -35,6 +36,7 @@
         *ngIf="!device.isFoundUser"
         (click)="openChat(device)"
         slot="end"
+        class="login-btn"
         >chat</ion-button
       >
       <ion-button
@@ -42,9 +44,10 @@
         *ngIf="device.isFoundUser"
         (click)="sold(device)"
         slot="end"
+        class="login-btn"
         >sold</ion-button
       >
-      <ion-button fill="outline" (click)="cancel(device)" slot="end"
+      <ion-button fill="outline" class="login-btn" (click)="cancel(device)" slot="end"
         >cancel</ion-button
       >
     </ion-item>

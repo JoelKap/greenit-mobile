@@ -23,7 +23,7 @@
     >
       <img *ngIf="!device.imageUrl" src="../../assets/images/no_image.png" />
       <img *ngIf="device.imageUrl" [src]="device.imageUrl" />
-      <ion-button color="light">
+      <ion-button class="login-btn">
         <ion-icon slot="icon-only" name="camera-outline" color="medium">
         </ion-icon>
       </ion-button>

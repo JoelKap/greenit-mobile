@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -34,10 +34,10 @@
         </ion-label>
       </div>
       <div>
-        <ion-button style="margin-top: 53px" (click)="save()"
+        <ion-button class="login-btn" style="margin-top: 53px" (click)="save()"
           ><ion-icon name="save-outline"></ion-icon>submit</ion-button
         >
-        <ion-button style="margin-top: 53px" (click)="companyInfo(company)"
+        <ion-button class="login-btn" style="margin-top: 53px" (click)="companyInfo(company)"
           ><ion-icon name="information-circle-outline"></ion-icon
           >Info</ion-button
         >
@@ -61,7 +61,7 @@
           ></ion-textarea>
         </ion-item>
         <br />
-        <ion-button type="button" expand="block" (click)="repair(company)">
+        <ion-button class="login-btn" type="button" expand="block" (click)="repair(company)">
           Send
         </ion-button>
       </form>

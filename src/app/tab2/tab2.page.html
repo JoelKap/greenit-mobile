@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-title style="font-size: small"> Buy or Sale device </ion-title>
     <ion-icon
       name="information-circle-outline"
@@ -11,7 +11,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-fab vertical="top" horizontal="end" edge slot="fixed">
-    <ion-fab-button (click)="chat()">
+    <ion-fab-button id="intro3" (click)="chat()">
       <ion-icon name="chatbox-ellipses-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
@@ -50,7 +50,7 @@
         </label>
       </div>
       <label vertical="left" style="font-size: 12px"
-        >Posted By: {{seller}}</label
+        >Posted By: {{device.owner}}</label
       ><br />
       <label *ngIf="device.createdAt" vertical="left" style="font-size: 12px"
         >Posted On: {{device?.createdAt | date}}

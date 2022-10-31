@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar>
     <ion-title style="font-size: small">Home</ion-title>
     <ion-icon name="home-outline" slot="start"></ion-icon>
   </ion-toolbar>
@@ -7,15 +7,15 @@
 
 <ion-content [fullscreen]="true">
   <ion-fab vertical="bottom" horizontal="end">
-    <ion-fab-button>
+    <ion-fab-button id="intro">
       <ion-icon name="ellipsis-horizontal-circle-outline"></ion-icon>
     </ion-fab-button>
     <ion-fab-list side="top">
-      <ion-fab-button (click)="info()" data-desc="Contact us">
-        <ion-icon name="information-circle-outline"></ion-icon>
+      <ion-fab-button class="login-btn" style="color: white;" (click)="info()">
+        <ion-icon style="color: white;" name="information-circle-outline"></ion-icon>
       </ion-fab-button>
-      <ion-fab-button (click)="login()" data-desc="Login">
-        <ion-icon name="lock-closed-outline"></ion-icon>
+      <ion-fab-button class="login-btn" (click)="login()">
+        <ion-icon style="color: white;" name="lock-closed-outline"></ion-icon>
       </ion-fab-button>
     </ion-fab-list>
   </ion-fab>
@@ -30,6 +30,7 @@
       <ion-button
         type="submit"
         shape="round"
+        class="login-btn"
         (click)="search()"
         clear
         item-right
@@ -49,7 +50,7 @@
         <p style="font-size: small; text-align: center">
           As simple as 1 2 3...
         </p>
-        <ion-button (click)="next()" fill="outline" style="color: black"
+        <ion-button (click)="next()" class="login-btn" style="color: white"
           >Next</ion-button
         >
       </ion-text>
@@ -63,7 +64,7 @@
         <p style="font-size: small; text-align: center">
           Recycle your devices or get it repaired
         </p>
-        <ion-button (click)="previous()" fill="outline" style="color: black"
+        <ion-button (click)="previous()" class="login-btn" style="color: white"
           >Previous</ion-button
         >
       </ion-text>

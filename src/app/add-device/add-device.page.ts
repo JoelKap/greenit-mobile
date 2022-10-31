@@ -115,32 +115,23 @@ export class AddDevicePage implements OnInit, OnDestroy {
       this.deviceForm.controls['owner'].setValue(
         users[0].name + ' ' + users[0].lastname
       );
-
+      debugger;
       var exist = of();
       var imei = this.deviceForm.controls.imei.value;
       if (imei === '') {
-        this.deviceForm.controls.imei.setValue('NO IMEI');
-        // return exist
-        // .pipe(
-        //   map((item: any) => {
-        //     return [];
-        //   })
-        // );
+        this.deviceForm.controls.owner.setValue(users[0].name + ' ' + users[0].lastname);
+        this.firestore
+        .doc(`devices/${id}`)
+        .set({
+          id,
+          ...this.deviceForm.value,
+        })
+        .then((res) => {
+          loading.dismiss();
+          this.initializePreview(id);
+        });
       } else {
         exist = this.firestore
-          .collection<any>(`devices`, (ref) => {
-            return ref
-              .where('imei', '==', this.deviceForm.controls['imei'].value)
-              .limit(1);
-          })
-          .get()
-          .pipe(
-            map((item: any) => {
-              return item.docs.map((dataItem: any) => dataItem.data());
-            })
-          );
-      }
-      exist = this.firestore
         .collection<any>(`devices`, (ref) => {
           return ref
             .where('imei', '==', this.deviceForm.controls['imei'].value)
@@ -152,8 +143,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
             return item.docs.map((dataItem: any) => dataItem.data());
           })
         );
-
-      exist.toPromise().then((res: any) => {
+        exist.toPromise().then((res: any) => {
         if (res.length) {
           if (res[0].status === 'LOST' || res[0].status === 'STOLEN') {
             //Let user know taht device is already been registered on the platform and reported lost or stolen
@@ -177,6 +167,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
             //HARD delete existing device details and register new user
             this.deviceService.deleteDevice(res[0]).then((resp) => {
               if (resp) {
+                this.deviceForm.controls.owner.setValue(users[0].name + ' ' + users[0].lastname);
                 this.firestore
                   .doc(`devices/${id}`)
                   .set({
@@ -193,6 +184,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
             });
           }
         } else {
+          this.deviceForm.controls.owner.setValue(users[0].name + ' ' + users[0].lastname);
           this.firestore
             .doc(`devices/${id}`)
             .set({
@@ -204,7 +196,8 @@ export class AddDevicePage implements OnInit, OnDestroy {
               this.initializePreview(id);
             });
         }
-      });
+      })
+      }
     });
   }
 

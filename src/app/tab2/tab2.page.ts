@@ -64,9 +64,9 @@ export class Tab2Page implements OnInit {
           device.createdAt = new Date(device.createdAt.seconds * 1000);
         }
 
-        this.deviceService.getFoundBy(device.email).subscribe((user: any) => {
-          this.seller = user[0].name + ' ' + user[0].lastname;
-        });
+        // this.deviceService.getFoundBy(device.email).subscribe((user: any) => {
+        //   this.seller = user[0].name + ' ' + user[0].lastname;
+        // });
 
         this.storage
           .ref(`/deviceFiles/${device.id}`)
@@ -158,10 +158,12 @@ export class Tab2Page implements OnInit {
           document.datePurchased,
           'short'
         );
+        const imeiSerial =
+        document.imei === 'NO IMEI' ? document.serial : document.imei;
         this.alertController
           .create({
             header: document.documentType,
-            message: `EMEI: ${document.imei}`,
+            message: `${imeiSerial}`,
             buttons: [
               {
                 text: 'Close',
@@ -191,10 +193,12 @@ export class Tab2Page implements OnInit {
           document.datePurchased,
           'short'
         );
+        const imeiSerial =
+        document.imei === 'NO IMEI' ? document.serial : document.imei;
         this.alertController
           .create({
             header: document.documentType,
-            message: `EMEI: ${document.imei}`,
+            message: `${imeiSerial}`,
             buttons: [
               {
                 text: 'Close',
